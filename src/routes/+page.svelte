@@ -1,31 +1,58 @@
 <script lang="ts">
 	import Roller from './Roller.svelte';
-	import { Input } from '$lib/components/ui/input';
-	import type { FormInputEvent } from '$lib/components/ui/input';
-	import { handlePaste } from '$lib/ics';
+	import { Input, type FormInputEvent } from '$lib/components/ui/input';
+	import { parseInput, createEventAttributes, type Class } from '$lib/ics';
 	import { slide } from 'svelte/transition';
 	import { CircleHelp } from 'lucide-svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { createEvents, type EventAttributes } from 'ics';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
+	let fileName = 'schedule.ics'; //TODO: Based on semester
 
+	let showErrorInterval: number;
 	let showError = $state('');
 	let showSuccess = $state(false);
-	let showErrorInterval: number;
+	let classes: Class[] = $state([]);
 
-	const onPaste = (e: FormInputEvent<ClipboardEvent>) => {
-		showSuccess = false;
-		showError = '';
-		try {
-			handlePaste(e);
-			showSuccess = true;
-		} catch (err: any) {
-			showError = err.message;
-			clearInterval(showErrorInterval);
-			showErrorInterval = setInterval(() => {
-				showError = '';
-			}, 3000);
+	// // Every second, inverse the value of showSuccess
+	// setInterval(() => {
+	// 	showSuccess = !showSuccess;
+	// }, 1000);
+
+	const handlePaste = (e: FormInputEvent<ClipboardEvent>) => {
+		e.preventDefault();
+		if (!e.clipboardData) return;
+		({ showSuccess, showError } = { showSuccess: false, showError: '' });
+
+		classes = parseInput(e.clipboardData.getData('text'));
+
+		if (classes.length === 0) {
+			displayError('No classes found, are you sure you copied the right thing?');
+			return;
 		}
+
+		const events: EventAttributes[] = createEventAttributes(classes);
+		// createEvents(events, downloadIcs);
+		showSuccess = true;
+	};
+
+	const displayError = (err: string) => {
+		showError = err;
+		clearInterval(showErrorInterval);
+		showErrorInterval = setInterval(() => {
+			showError = '';
+		}, 3000);
+	};
+
+	const downloadIcs = (error: any, value: String) => {
+		const blob = new Blob([value as BlobPart], { type: 'text/calendar' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = fileName;
+		a.click();
+		URL.revokeObjectURL(url);
 	};
 </script>
 
@@ -44,7 +71,7 @@
 				class="m-4 max-w-80"
 				id="scheduleInput"
 				placeholder="Paste your schedule"
-				on:paste={onPaste}
+				on:paste={handlePaste}
 				on:keypress={(e) => e.preventDefault()}
 			></Input>
 			<Tooltip.Root openDelay={100} closeOnPointerDown={false}>
@@ -82,6 +109,7 @@
 			Schedule successfully generated! <br /> Import the .ics file to your favourite calendar app.
 		</p>
 	{/if}
+	{#if classes}{classes.map((cls) => cls.COURSE)}{/if}
 </section>
 
 <style>

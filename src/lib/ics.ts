@@ -1,7 +1,6 @@
-import type { EventAttributes, DateArray } from 'ics';
+import { createEvents, type EventAttributes, type DateArray } from 'ics';
 import type { FormInputEvent } from './components/ui/input';
 import { nanoid } from 'nanoid';
-import { createEvents } from 'ics';
 
 export type Class = {
 	COURSE: string;
@@ -41,7 +40,7 @@ export const handlePaste = (e: FormInputEvent<ClipboardEvent>): void => {
 	}
 };
 
-const parseInput = (text: String): Class[] => {
+export const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
 	let currentClass: Class = {} as Class;
 	console.log('Input:\n', text);
@@ -76,7 +75,7 @@ const parseInput = (text: String): Class[] => {
 	return classes;
 };
 
-const createEventAttributes = (classes: Class[]): EventAttributes[] => {
+export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 	let events: EventAttributes[] = [];
 	for (const cls of classes) {
 		const event: EventAttributes = {
