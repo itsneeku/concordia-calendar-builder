@@ -18,6 +18,7 @@ const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const campuses = ['SGW', 'LOY', 'TBA'];
 const courseRegex = /^[A-Za-z]{3,4} \d{3,4}$/; // Tests for 3-4 letters, one space, and 3-4 digits
 const componentRegex = /\(.*\)/; // Test for opening and closing parantheses
+const mobileTableRegex = /\s*(Schedule|Class)\s*/; // Tests for the word Schedule or Class that is present on the mobile student center table
 
 export const handlePaste = (e: FormInputEvent<ClipboardEvent>): void => {
 	e.preventDefault();
@@ -43,7 +44,9 @@ export const handlePaste = (e: FormInputEvent<ClipboardEvent>): void => {
 const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
 	let currentClass: Class = {} as Class;
-	for (const line of text.split('\n')) {
+	console.log('Input:\n', text);
+	for (let line of text.split('\n')) {
+		line = line.replace(mobileTableRegex, '');
 		try {
 			// MoWe 1:15PM - 2:30PM
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
