@@ -85,7 +85,7 @@
 							Go to your <a
 								class="underline"
 								href="https://campus.concordia.ca/psc/pscsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_STUDENT_CENTER.GBL?Page=SSS_STUDENT_CENTER&Action=U&TargetFrameName=None"
-								>Student Center</a
+								target="_blank">Student Center</a
 							>
 						</li>
 						<li>Copy your Schedule/Deadlines table as shown</li>

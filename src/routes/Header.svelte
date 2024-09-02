@@ -8,7 +8,7 @@
 	<ModeWatcher />
 
 	<Button
-		on:click={() => (window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')}
+		on:click={() => window.open('https://github.com/itsneeku/concordia-ics-builder', '_blank')}
 		variant="ghost"
 		size="icon"
 	>
