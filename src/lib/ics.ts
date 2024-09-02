@@ -3,12 +3,16 @@ import type { FormInputEvent } from './components/ui/input';
 import { nanoid } from 'nanoid';
 
 export type Class = {
-	COURSE: string;
-	SECTION: string;
-	COMPONENT: string;
-	DAYS: string[];
-	TIMES: string[];
-	ROOM: string;
+	name: string;
+	section: string;
+	component: string;
+	days: string[];
+	startHour: number;
+	startMinute: number;
+	endHour: number;
+	endMinute: number;
+	times: string[];
+	location: string;
 };
 
 const semesterStartDate: DateArray = [2024, 9, 3];
@@ -49,18 +53,18 @@ export const parseInput = (text: String): Class[] => {
 		try {
 			// MoWe 1:15PM - 2:30PM
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
-				currentClass.DAYS = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'g'))!; // ['Mo', 'We']
-				currentClass.TIMES = [line.split(' ')[1], line.split(' ')[3]]; // ['1:15PM', '2:30PM']
+				currentClass.days = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'g'))!; // ['Mo', 'We']
+				currentClass.times = [line.split(' ')[1], line.split(' ')[3]]; // ['1:15PM', '2:30PM']
 				// H 110 SGW
 			} else if (campuses.includes(line.split(' ').at(-1)!)) {
-				currentClass.ROOM = line; // H 110 SGW
+				currentClass.location = line; // H 110 SGW
 				// COMP 228-U
 			} else if (courseRegex.test(line.split('-')[0])) {
-				currentClass.COURSE = line.split('-')[0]; // COMP 228
-				currentClass.SECTION = line.slice(line.indexOf('-') + 1); // U
+				currentClass.name = line.split('-')[0]; // COMP 228
+				currentClass.section = line.slice(line.indexOf('-') + 1); // U
 				// LEC (1489)
 			} else if (componentRegex.test(line)) {
-				currentClass.COMPONENT = line.split(' ')[0]; // LEC
+				currentClass.component = line.split(' ')[0]; // LEC
 			}
 		} catch (err) {
 			console.error('Error parsing line:', line);
@@ -79,19 +83,19 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 	let events: EventAttributes[] = [];
 	for (const cls of classes) {
 		const event: EventAttributes = {
-			title: `${cls.COURSE} ${cls.COMPONENT}`,
+			title: `${cls.name} ${cls.component}`,
 			start: [
-				...getNextClassDate(semesterStartDate, cls.DAYS),
-				...get24HTime(cls.TIMES[0])
+				...getNextClassDate(semesterStartDate, cls.days),
+				...get24HTime(cls.times[0])
 			] as DateArray,
 			end: [
-				...getNextClassDate(semesterStartDate, cls.DAYS),
-				...get24HTime(cls.TIMES[1])
+				...getNextClassDate(semesterStartDate, cls.days),
+				...get24HTime(cls.times[1])
 			] as DateArray,
-			location: cls.ROOM,
-			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.DAYS?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate.join('')}`,
+			location: cls.location,
+			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.days?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate.join('')}`,
 			exclusionDates: getReadingWeek(2024, 10, 14, 18).map(
-				(date) => [...date, ...get24HTime(cls.TIMES[0])] as DateArray
+				(date) => [...date, ...get24HTime(cls.times[0])] as DateArray
 			),
 			uid: `${nanoid()}@concordiaCalendar.neeku.dev`,
 			startOutputType: 'local'
@@ -102,7 +106,7 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 };
 
 const isClassFullyPopulated = (cls: Partial<Class>): cls is Class => {
-	return Boolean(cls.DAYS && cls.TIMES && cls.ROOM && cls.COURSE && cls.SECTION && cls.COMPONENT);
+	return Boolean(cls.days && cls.times && cls.location && cls.name && cls.section && cls.component);
 };
 
 const getNextClassDate = (startDate: DateArray, classDays: string[]): DateArray => {

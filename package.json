@@ -41,6 +41,7 @@
 		"ics": "^3.7.6",
 		"lucide-svelte": "^0.438.0",
 		"mode-watcher": "^0.4.1",
+		"svelte-headless-table": "^0.18.2",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1"
 	}

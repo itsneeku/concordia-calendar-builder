@@ -15,7 +15,7 @@
 	let showSuccess = $state(false);
 	let classes: Class[] = $state([]);
 
-	// // Every second, inverse the value of showSuccess
+	// Every second, inverse the value of showSuccess
 	// setInterval(() => {
 	// 	showSuccess = !showSuccess;
 	// }, 1000);
@@ -31,9 +31,10 @@
 			displayError('No classes found, are you sure you copied the right thing?');
 			return;
 		}
+		console.log('classes:', JSON.parse(JSON.stringify(classes)));
 
 		const events: EventAttributes[] = createEventAttributes(classes);
-		// createEvents(events, downloadIcs);
+		createEvents(events, downloadIcs);
 		showSuccess = true;
 	};
 
@@ -109,7 +110,13 @@
 			Schedule successfully generated! <br /> Import the .ics file to your favourite calendar app.
 		</p>
 	{/if}
-	{#if classes}{classes.map((cls) => cls.COURSE)}{/if}
+	<!-- {#if classes}
+		<div>
+			<p transition:slide>
+				{classes.map((cls) => cls.location)}
+			</p>
+		</div>
+	{/if} -->
 </section>
 
 <style>

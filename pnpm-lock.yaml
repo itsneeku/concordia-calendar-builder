@@ -26,6 +26,9 @@ importers:
       mode-watcher:
         specifier: ^0.4.1
         version: 0.4.1(svelte@5.0.0-next.242)
+      svelte-headless-table:
+        specifier: ^0.18.2
+        version: 0.18.2(svelte@5.0.0-next.242)
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1588,6 +1591,16 @@ packages:
       svelte:
         optional: true
 
+  svelte-headless-table@0.18.2:
+    resolution: {integrity: sha512-dnDTaXW5CNzRUjHVbc/Hb0Zv80zU4VcIUnAja6OuZriXvim1AqcWYQCHPRzBGwqj1m3YEHHNvspSzY0o5HzA0A==}
+    peerDependencies:
+      svelte: ^4.0.0
+
+  svelte-keyed@2.0.0:
+    resolution: {integrity: sha512-7TeEn+QbJC2OJrHiuM0T8vMBkms3DNpTE+Ir+NtnVBnBMA78aL4f1ft9t0Hn/pBbD/TnIXi4YfjFRAgtN+DZ5g==}
+    peerDependencies:
+      svelte: ^4.0.0
+
   svelte-parse-markup@0.1.5:
     resolution: {integrity: sha512-T6mqZrySltPCDwfKXWQ6zehipVLk4GWfH1zCMGgRtLlOIFPuw58ZxVYxVvotMJgJaurKi1i14viB2GIRKXeJTQ==}
     peerDependencies:
@@ -1629,6 +1642,16 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-render@2.0.1:
+    resolution: {integrity: sha512-RpB0SurwXm4xhjvHHtjeqMmvd645FURb79GFOotScOSqnKK5vpqBgoBPGC0pp+E/eZgDSQ9rRAdn/+N4ys1mXQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+
+  svelte-subscribe@2.0.1:
+    resolution: {integrity: sha512-eKXIjLxB4C7eQWPqKEdxcGfNXm2g/qJ67zmEZK/GigCZMfrTR3m7DPY93R6MX+5uoqM1FRYxl8LZ1oy4URWi2A==}
+    peerDependencies:
+      svelte: ^4.0.0
 
   svelte@5.0.0-next.242:
     resolution: {integrity: sha512-toHIaInuvpJl/3cWV3FBJV5fuUCUsdr1SzlvhYqlga1E5RK5qmbOK3hHd9GNz/VIcLwDDuMM/n2u/azm0kEuLA==}
@@ -3177,6 +3200,17 @@ snapshots:
     optionalDependencies:
       svelte: 5.0.0-next.242
 
+  svelte-headless-table@0.18.2(svelte@5.0.0-next.242):
+    dependencies:
+      svelte: 5.0.0-next.242
+      svelte-keyed: 2.0.0(svelte@5.0.0-next.242)
+      svelte-render: 2.0.1(svelte@5.0.0-next.242)
+      svelte-subscribe: 2.0.1(svelte@5.0.0-next.242)
+
+  svelte-keyed@2.0.0(svelte@5.0.0-next.242):
+    dependencies:
+      svelte: 5.0.0-next.242
+
   svelte-parse-markup@0.1.5(svelte@5.0.0-next.242):
     dependencies:
       svelte: 5.0.0-next.242
@@ -3193,6 +3227,15 @@ snapshots:
       postcss: 8.4.42
       postcss-load-config: 4.0.2(postcss@8.4.42)
       typescript: 5.5.4
+
+  svelte-render@2.0.1(svelte@5.0.0-next.242):
+    dependencies:
+      svelte: 5.0.0-next.242
+      svelte-subscribe: 2.0.1(svelte@5.0.0-next.242)
+
+  svelte-subscribe@2.0.1(svelte@5.0.0-next.242):
+    dependencies:
+      svelte: 5.0.0-next.242
 
   svelte@5.0.0-next.242:
     dependencies:
