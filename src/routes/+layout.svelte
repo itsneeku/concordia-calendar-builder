@@ -3,26 +3,10 @@
 	import Header from './Header.svelte';
 </script>
 
-<div class="app">
+<div class="flex min-h-screen flex-col p-2">
 	<Header></Header>
 
-	<main>
+	<main class="flex flex-1 flex-col">
 		<slot></slot>
 	</main>
 </div>
-
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-		padding: 0.5rem;
-	}
-
-	main {
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-	}
-</style>
