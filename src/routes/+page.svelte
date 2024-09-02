@@ -6,7 +6,6 @@
 	import { slide } from 'svelte/transition';
 	import { CircleHelp } from 'lucide-svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import tutorial from '$lib/images/tutorial.png';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 
@@ -67,7 +66,7 @@
 					<li>Paste it in the input field</li>
 				</ol>
 				<p>
-					<img src={tutorial} alt="Tutorial" class="p-2" />
+					<enhanced:img src="$lib/images/tutorial.png" alt="Tutorial" class="p-2" />
 				</p>
 			</Tooltip.Content>
 		</Tooltip.Root>
