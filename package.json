@@ -21,6 +21,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
 		"globals": "^15.0.0",
+		"nanoid": "^5.0.7",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.5",
 		"prettier-plugin-tailwindcss": "^0.6.5",
@@ -35,6 +36,7 @@
 	"dependencies": {
 		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
+		"ics": "^3.7.6",
 		"lucide-svelte": "^0.438.0",
 		"mode-watcher": "^0.4.1",
 		"tailwind-merge": "^2.5.2",
