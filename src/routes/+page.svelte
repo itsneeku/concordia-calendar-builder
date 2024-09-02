@@ -66,7 +66,7 @@
 					<li>Paste it in the input field</li>
 				</ol>
 				<p>
-					<enhanced:img src="$lib/images/tutorial.png" alt="Tutorial" class="p-2" />
+					<enhanced:img src="$lib/images/tutorial.png" alt="Schedule/Deadlines table" class="p-2" />
 				</p>
 			</Tooltip.Content>
 		</Tooltip.Root>
