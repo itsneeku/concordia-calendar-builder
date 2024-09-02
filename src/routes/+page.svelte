@@ -5,16 +5,21 @@
 	import { handlePaste } from '$lib/ics';
 	import { slide } from 'svelte/transition';
 	import { CircleHelp } from 'lucide-svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import tutorial from '$lib/images/tutorial.png';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 
 	let showError = $state('');
+	let showSuccess = $state(false);
 	let showErrorInterval: number;
 
 	const onPaste = (e: FormInputEvent<ClipboardEvent>) => {
+		showSuccess = false;
 		showError = '';
 		try {
 			handlePaste(e);
+			showSuccess = true;
 		} catch (err: any) {
 			showError = err.message;
 			clearInterval(showErrorInterval);
@@ -45,10 +50,35 @@
 			on:paste={onPaste}
 			on:keypress={(e) => e.preventDefault()}
 		></Input>
-		<CircleHelp strokeWidth={1.75} />
+		<Tooltip.Root openDelay={100} closeOnPointerDown={false}>
+			<Tooltip.Trigger>
+				<CircleHelp strokeWidth={1.75} />
+			</Tooltip.Trigger>
+			<Tooltip.Content class="max-w-lg text-wrap text-justify">
+				<ol class=" text-md list-inside list-decimal space-y-1 p-2">
+					<li>
+						Go to your <a
+							class="underline"
+							href="https://campus.concordia.ca/psc/pscsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_STUDENT_CENTER.GBL?Page=SSS_STUDENT_CENTER&Action=U&TargetFrameName=None"
+							>Student Center</a
+						>
+					</li>
+					<li>Copy your Schedule/Deadlines table as shown</li>
+					<li>Paste it in the input field</li>
+				</ol>
+				<p>
+					<img src={tutorial} alt="Tutorial" class="p-2" />
+				</p>
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</form>
 	{#if showError}
 		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
+	{/if}
+	{#if true}
+		<p transition:slide class="text-green-600 dark:text-green-400">
+			Schedule successfully generated! <br /> Import the .ics file to your favourite calendar app.
+		</p>
 	{/if}
 </section>
 
