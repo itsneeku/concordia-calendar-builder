@@ -74,7 +74,7 @@
 	{#if showError}
 		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
 	{/if}
-	{#if true}
+	{#if showSuccess}
 		<p transition:slide class="text-green-600 dark:text-green-400">
 			Schedule successfully generated! <br /> Import the .ics file to your favourite calendar app.
 		</p>
