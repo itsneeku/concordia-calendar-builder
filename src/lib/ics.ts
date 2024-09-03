@@ -94,7 +94,7 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 				...get24HTime(cls.times[1])
 			] as DateArray,
 			location: cls.location,
-			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.days?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}${semesterEndDate[2]}0`,
+			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.days?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}`,
 			exclusionDates: getReadingWeek(2024, 10, 14, 18).map(
 				(date) => [...date, ...get24HTime(cls.times[0])] as DateArray
 			),
