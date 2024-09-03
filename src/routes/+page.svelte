@@ -26,6 +26,7 @@
 		e.preventDefault();
 		if (!e.clipboardData) return;
 		({ showSuccess, showError } = { showSuccess: '', showError: '' });
+		console.log(e.clipboardData);
 
 		classes = parseInput(e.clipboardData.getData('text'));
 
@@ -125,7 +126,6 @@
 			/>
 		</div>
 	{/if}
-
 </section>
 
 <style>

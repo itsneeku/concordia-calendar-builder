@@ -4,66 +4,56 @@ import { nanoid } from 'nanoid';
 
 export type Class = {
 	name: string;
-	section: string;
 	component: string;
 	days: string[];
-	startHour: number;
-	startMinute: number;
-	endHour: number;
-	endMinute: number;
-	times: string[];
+	timeslot: Timeslot;
 	location: string;
+	uid: string;
+};
+
+export type Timeslot = {
+	start: {
+		hour: number;
+		minute: number;
+	};
+	end: {
+		hour: number;
+		minute: number;
+	};
 };
 
 const semesterStartDate: DateArray = [2024, 9, 3];
 const semesterEndDate: DateArray = [2024, 12, 3];
 const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+const daysOfWeekFull = [
+	'Sunday',
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday'
+];
 const campuses = ['SGW', 'LOY', 'TBA'];
-const courseRegex = /^[A-Za-z]{3,4} \d{3,4}$/; // Tests for 3-4 letters, one space, and 3-4 digits
+const courseRegex = /^[A-Za-z]{3,4} \d{3,4}/; // Tests for 3-4 letters, one space, and 3-4 digits
 const componentRegex = /\(.*\)/; // Test for opening and closing parantheses
-const mobileTableRegex = /\s*(Schedule|Class)\s*/; // Tests for the word Schedule or Class that is present on the mobile student center table
-
-export const handlePaste = (e: FormInputEvent<ClipboardEvent>): void => {
-	e.preventDefault();
-	if (e.clipboardData) {
-		const text = e.clipboardData.getData('text');
-		let classes: Class[] = parseInput(text);
-		if (classes.length === 0) {
-			throw new Error('No classes found, are you sure you copied the right thing?');
-		}
-		const events: EventAttributes[] = createEventAttributes(classes);
-		createEvents(events, async (error, value) => {
-			const blob = new Blob([value], { type: 'text/calendar' });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'schedule.ics'; //TODO: Based on semester
-			a.click();
-			URL.revokeObjectURL(url);
-		});
-	}
-};
 
 export const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
 	let currentClass: Class = {} as Class;
 	console.log('Input:\n', text);
 	for (let line of text.split('\n')) {
-		line = line.replace('\r', '');
-		line = line.replace(mobileTableRegex, '');
+		line = normalize(line);
+		console.log(`--------->${line}`);
 		try {
 			// MoWe 1:15PM - 2:30PM
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
-				currentClass.days = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'g'))!; // ['Mo', 'We']
-				currentClass.times = [line.split(' ')[1], line.split(' ')[3]]; // ['1:15PM', '2:30PM']
-				// H 110 SGW
-			} else if (campuses.includes(line.split(' ').at(-1)!)) {
-				currentClass.location = line.replace(/\s+/g, ' '); // H 110 SGW
-				// COMP 228-U
-			} else if (courseRegex.test(line.split('-')[0])) {
+				currentClass.days = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'gi'))!;
+				currentClass.timeslot = getTimeslot(line.substring(line.search(/\d/)).split(' - '));
+			} else if (campuses.some((campus) => line.endsWith(campus))) {
+				currentClass.location = line; // H 110 SGW
+			} else if (courseRegex.test(line)) {
 				currentClass.name = line.split('-')[0]; // COMP 228
-				currentClass.section = line.slice(line.indexOf('-') + 1); // U
-				// LEC (1489)
 			} else if (componentRegex.test(line)) {
 				currentClass.component = line.split(' ')[0]; // LEC
 			}
@@ -73,11 +63,31 @@ export const parseInput = (text: String): Class[] => {
 			continue;
 		}
 		if (isClassFullyPopulated(currentClass)) {
-			classes.push(currentClass);
+			classes.push({ ...currentClass, uid: `${nanoid()}@concordiaCalendar.neeku.dev` });
 			currentClass = {} as Class;
 		}
 	}
 	return classes;
+};
+
+const getTimeslot = (text: string[]): Timeslot => {
+	const parseTime = (time: string) => {
+		let [hour, minute] = time.split(':').map((part) => parseInt(part));
+		if (time.toLowerCase().includes('pm') && hour !== 12) hour += 12;
+		if (time.toLowerCase().includes('am') && hour === 12) hour = 0;
+		return { hour, minute };
+	};
+
+	const [start, end] = text.map(parseTime);
+
+	return { start, end };
+};
+
+const normalize = (text: string): string => {
+	return text
+		.replace(/(Schedule|Class)/, '')
+		.replace(/\s+/g, ' ')
+		.trim();
 };
 
 export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
@@ -107,7 +117,7 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 };
 
 const isClassFullyPopulated = (cls: Partial<Class>): cls is Class => {
-	return Boolean(cls.days && cls.times && cls.location && cls.name && cls.section && cls.component);
+	return Boolean(cls.days && cls.timeslot && cls.location && cls.name && cls.component);
 };
 
 const getNextClassDate = (startDate: DateArray, classDays: string[]): DateArray => {
@@ -119,15 +129,6 @@ const getNextClassDate = (startDate: DateArray, classDays: string[]): DateArray 
 		}
 		nextDate.setDate(nextDate.getDate() + 1);
 	}
-};
-
-const get24HTime = (oldTime: string): [number, number] => {
-	const [time, period] = oldTime.split(/(?=[AP]M)/i);
-	let [hours, minutes] = time.split(':').map(Number);
-	if (period.toLowerCase() === 'pm' && hours !== 12) hours += 12;
-	if (period.toLowerCase() === 'am' && hours === 12) hours = 0;
-
-	return [hours, minutes];
 };
 
 const getReadingWeek = (
