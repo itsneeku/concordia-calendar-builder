@@ -6,24 +6,26 @@
 	import { CircleHelp } from 'lucide-svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { createEvents, type EventAttributes } from 'ics';
+	import DataTable from './DataTable.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { writable } from 'svelte/store';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 	let fileName = 'schedule.ics'; //TODO: Based on semester
 
 	let showErrorInterval: number;
 	let showError = $state('');
-	let showSuccess = $state(false);
+	let showSuccess = $state('');
 	let classes: Class[] = $state([]);
-
-	// Every second, inverse the value of showSuccess
-	// setInterval(() => {
-	// 	showSuccess = !showSuccess;
-	// }, 1000);
+	let classesStore = writable<Class[]>([]);
+	$effect(() => {
+		classesStore.set(classes);
+	});
 
 	const handlePaste = (e: FormInputEvent<ClipboardEvent>) => {
 		e.preventDefault();
 		if (!e.clipboardData) return;
-		({ showSuccess, showError } = { showSuccess: false, showError: '' });
+		({ showSuccess, showError } = { showSuccess: '', showError: '' });
 
 		classes = parseInput(e.clipboardData.getData('text'));
 
@@ -34,8 +36,7 @@
 		console.log('classes:', JSON.parse(JSON.stringify(classes)));
 
 		const events: EventAttributes[] = createEventAttributes(classes);
-		createEvents(events, downloadIcs);
-		showSuccess = true;
+		showSuccess = `Schedule successfully generated!<br/>Import the .ics file to your favourite calendar app.`;
 	};
 
 	const displayError = (err: string) => {
@@ -70,7 +71,6 @@
 		<form class="flex w-full max-w-sm items-center">
 			<Input
 				class="m-4 max-w-80"
-				id="scheduleInput"
 				placeholder="Paste your schedule"
 				on:paste={handlePaste}
 				on:keypress={(e) => e.preventDefault()}
@@ -107,16 +107,25 @@
 	{/if}
 	{#if showSuccess}
 		<p transition:slide class="text-green-600 dark:text-green-400">
-			Schedule successfully generated! <br /> Import the .ics file to your favourite calendar app.
+			{@html showSuccess}
 		</p>
-	{/if}
-	<!-- {#if classes}
-		<div>
-			<p transition:slide>
-				{classes.map((cls) => cls.location)}
-			</p>
+		<Button
+			variant="outline"
+			class="my-4"
+			on:click={() => {
+				createEvents(createEventAttributes(classes), downloadIcs);
+			}}>Download</Button
+		>
+		<div transition:slide class="container mx-auto text-left">
+			<DataTable
+				classes={classesStore}
+				onRemove={(name: string, comp: string) => {
+					classes = classes.filter((c) => c.name !== name || c.component !== comp);
+				}}
+			/>
 		</div>
-	{/if} -->
+	{/if}
+
 </section>
 
 <style>
