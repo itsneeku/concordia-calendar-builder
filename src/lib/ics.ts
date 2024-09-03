@@ -49,6 +49,7 @@ export const parseInput = (text: String): Class[] => {
 	let currentClass: Class = {} as Class;
 	console.log('Input:\n', text);
 	for (let line of text.split('\n')) {
+		line = line.replace('\r', '');
 		line = line.replace(mobileTableRegex, '');
 		try {
 			// MoWe 1:15PM - 2:30PM
