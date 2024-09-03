@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 export type Class = {
 	name: string;
 	component: string;
-	days: string[];
+	days: days[];
 	timeslot: Timeslot;
 	location: string;
 	uid: string;
@@ -21,6 +21,16 @@ export type Timeslot = {
 		minute: number;
 	};
 };
+
+enum days {
+	Su = 'Sunday',
+	Mo = 'Monday',
+	Tu = 'Tuesday',
+	We = 'Wednesday',
+	Th = 'Thursday',
+	Fr = 'Friday',
+	Sa = 'Saturday'
+}
 
 const semesterStartDate: DateArray = [2024, 9, 3];
 const semesterEndDate: DateArray = [2024, 12, 3];
@@ -41,25 +51,24 @@ const componentRegex = /\(.*\)/; // Test for opening and closing parantheses
 export const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
 	let currentClass: Class = {} as Class;
-	console.log('Input:\n', text);
 	for (let line of text.split('\n')) {
 		line = normalize(line);
-		console.log(`--------->${line}`);
 		try {
-			// MoWe 1:15PM - 2:30PM
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
-				currentClass.days = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'gi'))!;
+				currentClass.days = line
+					.split(' ')[0]
+					.split('')
+					.map((code) => days[code as keyof typeof days]);
 				currentClass.timeslot = getTimeslot(line.substring(line.search(/\d/)).split(' - '));
 			} else if (campuses.some((campus) => line.endsWith(campus))) {
-				currentClass.location = line; // H 110 SGW
+				currentClass.location = line;
 			} else if (courseRegex.test(line)) {
-				currentClass.name = line.split('-')[0]; // COMP 228
+				currentClass.name = line.split('-')[0];
 			} else if (componentRegex.test(line)) {
-				currentClass.component = line.split(' ')[0]; // LEC
+				currentClass.component = line.split(' ')[0];
 			}
 		} catch (err) {
-			console.error('Error parsing line:', line);
-			console.error(err);
+			console.error('Error parsing line:', line, '\n', err);
 			continue;
 		}
 		if (isClassFullyPopulated(currentClass)) {
