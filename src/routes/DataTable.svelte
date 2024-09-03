@@ -44,6 +44,7 @@
 			header: 'location',
 			cell: ({ value }) => {
 				const split = value.split(' ');
+				console.log('-----------', value);
 				if (split.length > 2) {
 					const campus = split.pop();
 					return split.join(' ') + ` <span class="font-semibold">${campus}</span>`;

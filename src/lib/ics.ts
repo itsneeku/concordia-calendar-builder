@@ -57,7 +57,7 @@ export const parseInput = (text: String): Class[] => {
 				currentClass.times = [line.split(' ')[1], line.split(' ')[3]]; // ['1:15PM', '2:30PM']
 				// H 110 SGW
 			} else if (campuses.includes(line.split(' ').at(-1)!)) {
-				currentClass.location = line; // H 110 SGW
+				currentClass.location = line.replace(/\s+/g, ' '); // H 110 SGW
 				// COMP 228-U
 			} else if (courseRegex.test(line.split('-')[0])) {
 				currentClass.name = line.split('-')[0]; // COMP 228
