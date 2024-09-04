@@ -11,68 +11,60 @@
 	import { writable, type Writable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
 	import DataTableActions from './DataTableActions.svelte';
-	let {
-		classes,
-		onRemove
-	}: {
-		classes: Writable<Class[]>;
-		onRemove: (uid: string) => void;
-	} = $props();
+	import { classes } from '../stores';
 
-	$effect(() => {
-		table = createTable(classes);
-	});
-
-	let table = createTable(classes);
-	const columns = table.createColumns([
-		table.column({
-			accessor: ({ name, component }) => `${name} ${component}`,
-			header: 'course',
-			cell: ({ value }) => {
-				const values = value.split(' ');
-				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
-				// return value.split(' ').splice(0, 2).join(' ');
-			}
-		}),
-		table.column({
-			accessor: 'days',
-			header: 'days',
-			cell: ({ value }) => {
-				return value.join(', ');
-			}
-		}),
-		table.column({
-			accessor: 'location',
-			header: 'location',
-			cell: ({ value }) => {
-				const split = value.split(' ');
-				if (split.length > 2) {
-					const campus = split.pop();
-					return `<span class="font-semibold">${split.join(' ')}</span> ${campus}`;
+	const table = $state(createTable(classes));
+	const columns = $state(
+		table.createColumns([
+			table.column({
+				accessor: ({ name, component }) => `${name} ${component}`,
+				header: 'course',
+				cell: ({ value }) => {
+					const values = value.split(' ');
+					return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
+					// return value.split(' ').splice(0, 2).join(' ');
 				}
-				return value;
-			}
-		}),
-		table.column({
-			accessor: 'timeslot',
-			header: 'time',
-			cell: ({ value }) => {
-				return `${value.start.hour.toString().padStart(2, '0')}:${value.start.minute.toString().padStart(2, '0')} - ${value.end.hour.toString().padStart(2, '0')}:${value.end.minute.toString().padStart(2, '0')}`;
-			}
-		}),
-		table.column({
-			// accessor: ({ name, component }) => ({ name, component }),
-			accessor: 'uid',
-			header: '',
-			cell: ({ value }) => {
-				return createRender(DataTableActions, {
-					uid: value,
-					onRemove: onRemove
-				});
-			}
-		})
-	]);
-	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
+			}),
+			table.column({
+				accessor: 'days',
+				header: 'days',
+				cell: ({ value }) => {
+					return value.join(', ');
+				}
+			}),
+			table.column({
+				accessor: 'location',
+				header: 'location',
+				cell: ({ value }) => {
+					const split = value.split(' ');
+					if (split.length > 2) {
+						const campus = split.pop();
+						return `<span class="font-semibold">${split.join(' ')}</span> ${campus}`;
+					}
+					return value;
+				}
+			}),
+			table.column({
+				accessor: 'timeslot',
+				header: 'time',
+				cell: ({ value }) => {
+					return `${value.start.hour.toString().padStart(2, '0')}:${value.start.minute.toString().padStart(2, '0')} - ${value.end.hour.toString().padStart(2, '0')}:${value.end.minute.toString().padStart(2, '0')}`;
+				}
+			}),
+			table.column({
+				accessor: 'uid',
+				header: '',
+				cell: ({ value }) => {
+					return createRender(DataTableActions, {
+						uid: value
+					});
+				}
+			})
+		])
+	);
+	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = $state(
+		table.createViewModel(columns)
+	);
 </script>
 
 <div class="rounded-lg border">
@@ -106,7 +98,6 @@
 										<Render of={cell.render()} />
 									{:else}
 										{@html cell.render()}
-										{console.log(cell)}
 									{/if}
 								</Table.Cell>
 							</Subscribe>

@@ -10,6 +10,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { writable } from 'svelte/store';
 	import textData from '$lib/debuggingInput.json';
+	import { classes } from '../stores';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 	let fileName = 'schedule.ics'; //TODO: Based on semester
@@ -17,21 +18,15 @@
 	let showErrorInterval: number;
 	let showError = $state('');
 	let showSuccess = $state('');
-	let classes: Class[] = $state(textData as Class[]);
-	let classesStore = writable<Class[]>(classes);
-
-	$effect(() => {
-		classesStore.set(classes);
-	});
 
 	const handlePaste = (e: FormInputEvent<ClipboardEvent>) => {
 		e.preventDefault();
 		if (!e.clipboardData) return;
 		({ showSuccess, showError } = { showSuccess: '', showError: '' });
 
-		classes = parseInput(e.clipboardData.getData('text'));
+		classes.set(parseInput(e.clipboardData.getData('text')));
 
-		if (classes.length === 0) {
+		if ($classes.length === 0) {
 			displayError('No classes found, are you sure you copied the right thing?');
 			return;
 		}
@@ -105,7 +100,7 @@
 	{#if showError}
 		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
 	{/if}
-	{#if classes.length > 0}
+	{#if $classes.length > 0}
 		<p transition:slide class="text-green-600 dark:text-green-400">
 			{@html showSuccess}
 		</p>
@@ -113,19 +108,11 @@
 			variant="outline"
 			class="my-4"
 			on:click={() => {
-				createEvents(createEventAttributes(classes), downloadIcs);
+				createEvents(createEventAttributes($classes), downloadIcs);
 			}}>Download .ics</Button
 		>
 		<div transition:slide class="container mx-auto text-left">
-			<DataTable
-				classes={classesStore}
-				onRemove={(uid: string) => {
-					const classToRemove = classes.find((c) => c.uid === uid);
-					if (classToRemove) {
-						classToRemove.removed = !classToRemove.removed;
-					}
-				}}
-			/>
+			<DataTable />
 		</div>
 	{/if}
 </section>
