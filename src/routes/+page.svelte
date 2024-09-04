@@ -8,8 +8,6 @@
 	import { createEvents, type EventAttributes } from 'ics';
 	import DataTable from './DataTable.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { writable } from 'svelte/store';
-	import textData from '$lib/debuggingInput.json';
 	import { classes } from '../stores';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];

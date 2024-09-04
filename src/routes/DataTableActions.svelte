@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Plus, X } from 'lucide-svelte';
-
 	import * as Tooltip from '$lib/components/ui/tooltip';
+	import { Plus, X } from 'lucide-svelte';
 	import { classes } from '../stores';
-	import type { Class } from '$lib/ics';
 
 	export let uid: string;
 
