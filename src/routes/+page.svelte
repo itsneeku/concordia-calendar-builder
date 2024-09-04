@@ -71,7 +71,12 @@
 				<Tooltip.Trigger>
 					<CircleHelp strokeWidth={1.75} />
 				</Tooltip.Trigger>
-				<Tooltip.Content class="max-w-lg text-wrap text-justify">
+				<Tooltip.Content
+					side="bottom"
+					class=" max-h-fit max-w-fit text-wrap text-justify"
+					fitViewport={true}
+					overlap={true}
+				>
 					<ol class=" text-md list-inside list-decimal space-y-1 p-2">
 						<li>
 							Go to your <a
@@ -95,12 +100,9 @@
 		</form>
 	</div>
 	{#if showError}
-		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
+		<p transition:slide class="text-primary">{showError}</p>
 	{/if}
 	{#if $classes.length > 0}
-		<p transition:slide class="text-green-600 dark:text-green-400">
-			{@html showSuccess}
-		</p>
 		<Button
 			variant="outline"
 			class="my-4"
