@@ -28,8 +28,7 @@
 			displayError('No classes found, are you sure you copied the right thing?');
 			return;
 		}
-		console.log('classes:', JSON.parse(JSON.stringify(classes)));
-		showSuccess = `Schedule successfully generated!<br/>Import the .ics file to your favourite calendar app.`;
+		showSuccess = `Schedule successfully generated!<br/>Once you're done editing, import the .ics file to your favourite calendar app.`;
 	};
 
 	const displayError = (err: string) => {

@@ -103,22 +103,25 @@ const normalize = (text: string): string => {
 export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 	let events: EventAttributes[] = [];
 	for (const cls of classes) {
+		if (cls.removed) continue;
 		const event: EventAttributes = {
 			title: `${cls.name} ${cls.component}`,
 			start: [
 				...getNextClassDate(semesterStartDate, cls.days),
-				...get24HTime(cls.times[0])
+				cls.timeslot.start.hour,
+				cls.timeslot.start.minute
 			] as DateArray,
 			end: [
 				...getNextClassDate(semesterStartDate, cls.days),
-				...get24HTime(cls.times[1])
+				cls.timeslot.end.hour,
+				cls.timeslot.end.minute
 			] as DateArray,
 			location: cls.location,
-			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.days?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}`,
+			recurrenceRule: getRecurrenceRule(cls.days, semesterEndDate),
 			exclusionDates: getReadingWeek(2024, 10, 14, 18).map(
-				(date) => [...date, ...get24HTime(cls.times[0])] as DateArray
+				(date) => [...date, cls.timeslot.start.hour, cls.timeslot.start.minute] as DateArray
 			),
-			uid: `${nanoid()}@concordiaCalendar.neeku.dev`,
+			uid: cls.uid,
 			startOutputType: 'local'
 		};
 		events.push(event);
@@ -130,11 +133,19 @@ const isClassFullyPopulated = (cls: Partial<Class>): cls is Class => {
 	return Boolean(cls.days && cls.timeslot && cls.location && cls.name && cls.component);
 };
 
+const getRecurrenceRule = (days: days[], semesterEndDate: DateArray): string =>
+	`FREQ=WEEKLY;
+	BYDAY=${days.map((day) => day.substring(0, 2).toUpperCase()).join()};
+	INTERVAL=1;
+	UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}
+	`.replace(/\s/g, '');
+
 const getNextClassDate = (startDate: DateArray, classDays: string[]): DateArray => {
+	console.log('in getNextClassDate', startDate, classDays);
 	const nextDate = new Date(startDate[0], startDate[1] - 1, startDate[2]);
 	while (true) {
-		const dayAbbr = daysOfWeek[nextDate.getDay()];
-		if (classDays.includes(dayAbbr)) {
+		const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(nextDate);
+		if (classDays.includes(dayName)) {
 			return [nextDate.getFullYear(), nextDate.getMonth() + 1, nextDate.getDate()];
 		}
 		nextDate.setDate(nextDate.getDate() + 1);

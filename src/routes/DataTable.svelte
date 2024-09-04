@@ -83,17 +83,12 @@
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell
+									{cell}
 									{...attrs}
 									class={(row as DataBodyRow<Class>).original.removed && cell.id != 'uid'
 										? 'opacity-25'
 										: ''}
-								>
-									{#if cell.id === 'uid'}
-										<Render of={cell.render()} />
-									{:else}
-										{@html cell.render()}
-									{/if}
-								</Table.Cell>
+								></Table.Cell>
 							</Subscribe>
 						{/each}
 					</Table.Row>
