@@ -105,7 +105,7 @@
 	{#if $classes.length > 0}
 		<Button
 			variant="outline"
-			class="my-4"
+			class="mb-8 mt-4"
 			on:click={() => {
 				createEvents(createEventAttributes($classes), downloadIcs);
 			}}>Download .ics</Button
