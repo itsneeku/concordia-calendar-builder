@@ -1,36 +1,25 @@
 <script lang="ts">
-	import { type Class } from '$lib/ics';
+	import { classes } from '../stores';
 	import {
 		createTable,
 		Render,
 		Subscribe,
 		createRender,
-		type ReadOrWritable
+		type DataBodyRow
 	} from 'svelte-headless-table';
-	import { type Writable } from 'svelte/store';
+	import { type Class } from '$lib/ics';
 	import * as Table from '$lib/components/ui/table';
 	import DataTableActions from './DataTableActions.svelte';
-	let {
-		classes,
-		onRemove
-	}: {
-		classes: Writable<Class[]>;
-		onRemove: (name: string, comp: string) => void;
-	} = $props();
 
-	$effect(() => {
-		table = createTable(classes);
-	});
-
-	let table = createTable(classes);
+	const table = createTable(classes);
 	const columns = table.createColumns([
 		table.column({
-			accessor: 'name',
-			header: 'course'
-		}),
-		table.column({
-			accessor: 'component',
-			header: 'component'
+			accessor: ({ name, component }) => `${name} ${component}`,
+			header: 'course',
+			cell: ({ value }) => {
+				const values = value.split(' ');
+				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
+			}
 		}),
 		table.column({
 			accessor: 'days',
@@ -46,19 +35,23 @@
 				const split = value.split(' ');
 				if (split.length > 2) {
 					const campus = split.pop();
-					return split.join(' ') + ` <span class="font-semibold">${campus}</span>`;
+					return `<span class="font-semibold">${split.join(' ')}</span> ${campus}`;
 				}
 				return value;
 			}
 		}),
 		table.column({
-			accessor: ({ name, component }) => ({ name, component }),
+			accessor: 'timeslot',
+			header: 'time',
+			cell: ({ value: { start, end } }) =>
+				`${start.hour}:${start.minute.toString().padStart(2, '0')} - ${end.hour}:${end.minute.toString().padStart(2, '0')}`
+		}),
+		table.column({
+			accessor: 'uid',
 			header: '',
 			cell: ({ value }) => {
 				return createRender(DataTableActions, {
-					name: value.name,
-					comp: value.component,
-					onRemove: onRemove
+					uid: value
 				});
 			}
 		})
@@ -89,13 +82,13 @@
 					<Table.Row {...rowAttrs}>
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
-								<Table.Cell {...attrs}>
-									{#if cell.id === 'location'}
-										{@html cell.render()}
-									{:else}
-										<Render of={cell.render()} />
-									{/if}
-								</Table.Cell>
+								<Table.Cell
+									{cell}
+									{...attrs}
+									class={(row as DataBodyRow<Class>).original.removed && cell.id != 'uid'
+										? 'opacity-25'
+										: ''}
+								></Table.Cell>
 							</Subscribe>
 						{/each}
 					</Table.Row>

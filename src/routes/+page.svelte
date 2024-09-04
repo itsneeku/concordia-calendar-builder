@@ -8,7 +8,7 @@
 	import { createEvents, type EventAttributes } from 'ics';
 	import DataTable from './DataTable.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { writable } from 'svelte/store';
+	import { classes } from '../stores';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 	let fileName = 'schedule.ics'; //TODO: Based on semester
@@ -16,27 +16,19 @@
 	let showErrorInterval: number;
 	let showError = $state('');
 	let showSuccess = $state('');
-	let classes: Class[] = $state([]);
-	let classesStore = writable<Class[]>([]);
-	$effect(() => {
-		classesStore.set(classes);
-	});
 
 	const handlePaste = (e: FormInputEvent<ClipboardEvent>) => {
 		e.preventDefault();
 		if (!e.clipboardData) return;
 		({ showSuccess, showError } = { showSuccess: '', showError: '' });
 
-		classes = parseInput(e.clipboardData.getData('text'));
+		classes.set(parseInput(e.clipboardData.getData('text')));
 
-		if (classes.length === 0) {
+		if ($classes.length === 0) {
 			displayError('No classes found, are you sure you copied the right thing?');
 			return;
 		}
-		console.log('classes:', JSON.parse(JSON.stringify(classes)));
-
-		const events: EventAttributes[] = createEventAttributes(classes);
-		showSuccess = `Schedule successfully generated!<br/>Import the .ics file to your favourite calendar app.`;
+		showSuccess = `Schedule successfully generated!<br/>Once you're done editing, import the .ics file to your favourite calendar app.`;
 	};
 
 	const displayError = (err: string) => {
@@ -58,8 +50,8 @@
 	};
 </script>
 
-<section class="text-center">
-	<div class="mt-24 flex flex-col items-center">
+<section class="my-24 text-center">
+	<div class="flex flex-col items-center">
 		<h1 class="mb-4 p-2 text-center text-5xl font-semibold tracking-tight lg:text-5xl">
 			Concordia .ics Builder
 		</h1>
@@ -79,7 +71,12 @@
 				<Tooltip.Trigger>
 					<CircleHelp strokeWidth={1.75} />
 				</Tooltip.Trigger>
-				<Tooltip.Content class="max-w-lg text-wrap text-justify">
+				<Tooltip.Content
+					side="bottom"
+					class=" max-h-fit max-w-fit text-wrap text-justify"
+					fitViewport={true}
+					overlap={true}
+				>
 					<ol class=" text-md list-inside list-decimal space-y-1 p-2">
 						<li>
 							Go to your <a
@@ -103,29 +100,20 @@
 		</form>
 	</div>
 	{#if showError}
-		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
+		<p transition:slide class="text-primary">{showError}</p>
 	{/if}
-	{#if showSuccess}
-		<p transition:slide class="text-green-600 dark:text-green-400">
-			{@html showSuccess}
-		</p>
+	{#if $classes.length > 0}
 		<Button
 			variant="outline"
-			class="my-4"
+			class="mb-8 mt-4"
 			on:click={() => {
-				createEvents(createEventAttributes(classes), downloadIcs);
-			}}>Download</Button
+				createEvents(createEventAttributes($classes), downloadIcs);
+			}}>Download .ics</Button
 		>
 		<div transition:slide class="container mx-auto text-left">
-			<DataTable
-				classes={classesStore}
-				onRemove={(name: string, comp: string) => {
-					classes = classes.filter((c) => c.name !== name || c.component !== comp);
-				}}
-			/>
+			<DataTable />
 		</div>
 	{/if}
-
 </section>
 
 <style>

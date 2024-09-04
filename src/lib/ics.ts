@@ -4,101 +4,124 @@ import { nanoid } from 'nanoid';
 
 export type Class = {
 	name: string;
-	section: string;
 	component: string;
-	days: string[];
-	startHour: number;
-	startMinute: number;
-	endHour: number;
-	endMinute: number;
-	times: string[];
+	days: days[];
+	timeslot: Timeslot;
 	location: string;
+	uid: string;
+	removed?: boolean;
 };
+
+export type Timeslot = {
+	start: {
+		hour: number;
+		minute: number;
+	};
+	end: {
+		hour: number;
+		minute: number;
+	};
+};
+
+enum days {
+	Su = 'Sunday',
+	Mo = 'Monday',
+	Tu = 'Tuesday',
+	We = 'Wednesday',
+	Th = 'Thursday',
+	Fr = 'Friday',
+	Sa = 'Saturday'
+}
 
 const semesterStartDate: DateArray = [2024, 9, 3];
 const semesterEndDate: DateArray = [2024, 12, 3];
 const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+const daysOfWeekFull = [
+	'Sunday',
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday'
+];
 const campuses = ['SGW', 'LOY', 'TBA'];
-const courseRegex = /^[A-Za-z]{3,4} \d{3,4}$/; // Tests for 3-4 letters, one space, and 3-4 digits
-const componentRegex = /\(.*\)/; // Test for opening and closing parantheses
-const mobileTableRegex = /\s*(Schedule|Class)\s*/; // Tests for the word Schedule or Class that is present on the mobile student center table
-
-export const handlePaste = (e: FormInputEvent<ClipboardEvent>): void => {
-	e.preventDefault();
-	if (e.clipboardData) {
-		const text = e.clipboardData.getData('text');
-		let classes: Class[] = parseInput(text);
-		if (classes.length === 0) {
-			throw new Error('No classes found, are you sure you copied the right thing?');
-		}
-		const events: EventAttributes[] = createEventAttributes(classes);
-		createEvents(events, async (error, value) => {
-			const blob = new Blob([value], { type: 'text/calendar' });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'schedule.ics'; //TODO: Based on semester
-			a.click();
-			URL.revokeObjectURL(url);
-		});
-	}
-};
+const courseRegex = /^[A-Za-z]{3,4} \d{3,4}/;
+const componentRegex = /\(.*\)/;
 
 export const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
 	let currentClass: Class = {} as Class;
-	console.log('Input:\n', text);
 	for (let line of text.split('\n')) {
-		line = line.replace('\r', '');
-		line = line.replace(mobileTableRegex, '');
+		line = normalize(line);
 		try {
-			// MoWe 1:15PM - 2:30PM
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
-				currentClass.days = line.split(' ')[0].match(new RegExp(daysOfWeek.join('|'), 'g'))!; // ['Mo', 'We']
-				currentClass.times = [line.split(' ')[1], line.split(' ')[3]]; // ['1:15PM', '2:30PM']
-				// H 110 SGW
-			} else if (campuses.includes(line.split(' ').at(-1)!)) {
-				currentClass.location = line.replace(/\s+/g, ' '); // H 110 SGW
-				// COMP 228-U
-			} else if (courseRegex.test(line.split('-')[0])) {
-				currentClass.name = line.split('-')[0]; // COMP 228
-				currentClass.section = line.slice(line.indexOf('-') + 1); // U
-				// LEC (1489)
+				currentClass.days = line
+					.split(' ')[0]
+					.match(/[A-Z][a-z]?/g)
+					?.map((day) => days[day as keyof typeof days]) as days[];
+				currentClass.timeslot = getTimeslot(line.substring(line.search(/\d/)).split(' - '));
+			} else if (campuses.some((campus) => line.endsWith(campus))) {
+				currentClass.location = line;
+			} else if (courseRegex.test(line)) {
+				currentClass.name = line.split('-')[0];
 			} else if (componentRegex.test(line)) {
-				currentClass.component = line.split(' ')[0]; // LEC
+				currentClass.component = line.split(' ')[0];
 			}
 		} catch (err) {
-			console.error('Error parsing line:', line);
-			console.error(err);
+			console.error('Error parsing line:', line, '\n', err);
 			continue;
 		}
 		if (isClassFullyPopulated(currentClass)) {
-			classes.push(currentClass);
+			classes.push({ ...currentClass, uid: `${nanoid()}@concordiaCalendar.neeku.dev` });
 			currentClass = {} as Class;
 		}
 	}
 	return classes;
 };
 
+const getTimeslot = (text: string[]): Timeslot => {
+	const parseTime = (time: string) => {
+		let [hour, minute] = time.split(':').map((part) => parseInt(part));
+		if (time.toLowerCase().includes('pm') && hour !== 12) hour += 12;
+		if (time.toLowerCase().includes('am') && hour === 12) hour = 0;
+		return { hour, minute };
+	};
+
+	const [start, end] = text.map(parseTime);
+
+	return { start, end };
+};
+
+const normalize = (text: string): string => {
+	return text
+		.replace(/(Schedule|Class)/, '')
+		.replace(/\s+/g, ' ')
+		.trim();
+};
+
 export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 	let events: EventAttributes[] = [];
 	for (const cls of classes) {
+		if (cls.removed) continue;
 		const event: EventAttributes = {
 			title: `${cls.name} ${cls.component}`,
 			start: [
 				...getNextClassDate(semesterStartDate, cls.days),
-				...get24HTime(cls.times[0])
+				cls.timeslot.start.hour,
+				cls.timeslot.start.minute
 			] as DateArray,
 			end: [
 				...getNextClassDate(semesterStartDate, cls.days),
-				...get24HTime(cls.times[1])
+				cls.timeslot.end.hour,
+				cls.timeslot.end.minute
 			] as DateArray,
 			location: cls.location,
-			recurrenceRule: `FREQ=WEEKLY;BYDAY=${cls.days?.join().toUpperCase()};INTERVAL=1;UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}`,
+			recurrenceRule: getRecurrenceRule(cls.days, semesterEndDate),
 			exclusionDates: getReadingWeek(2024, 10, 14, 18).map(
-				(date) => [...date, ...get24HTime(cls.times[0])] as DateArray
+				(date) => [...date, cls.timeslot.start.hour, cls.timeslot.start.minute] as DateArray
 			),
-			uid: `${nanoid()}@concordiaCalendar.neeku.dev`,
+			uid: cls.uid,
 			startOutputType: 'local'
 		};
 		events.push(event);
@@ -107,27 +130,26 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 };
 
 const isClassFullyPopulated = (cls: Partial<Class>): cls is Class => {
-	return Boolean(cls.days && cls.times && cls.location && cls.name && cls.section && cls.component);
+	return Boolean(cls.days && cls.timeslot && cls.location && cls.name && cls.component);
 };
 
+const getRecurrenceRule = (days: days[], semesterEndDate: DateArray): string =>
+	`FREQ=WEEKLY;
+	BYDAY=${days.map((day) => day.substring(0, 2).toUpperCase()).join()};
+	INTERVAL=1;
+	UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}
+	`.replace(/\s/g, '');
+
 const getNextClassDate = (startDate: DateArray, classDays: string[]): DateArray => {
+	console.log('in getNextClassDate', startDate, classDays);
 	const nextDate = new Date(startDate[0], startDate[1] - 1, startDate[2]);
 	while (true) {
-		const dayAbbr = daysOfWeek[nextDate.getDay()];
-		if (classDays.includes(dayAbbr)) {
+		const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(nextDate);
+		if (classDays.includes(dayName)) {
 			return [nextDate.getFullYear(), nextDate.getMonth() + 1, nextDate.getDate()];
 		}
 		nextDate.setDate(nextDate.getDate() + 1);
 	}
-};
-
-const get24HTime = (oldTime: string): [number, number] => {
-	const [time, period] = oldTime.split(/(?=[AP]M)/i);
-	let [hours, minutes] = time.split(':').map(Number);
-	if (period.toLowerCase() === 'pm' && hours !== 12) hours += 12;
-	if (period.toLowerCase() === 'am' && hours === 12) hours = 0;
-
-	return [hours, minutes];
 };
 
 const getReadingWeek = (
