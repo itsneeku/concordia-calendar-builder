@@ -7,6 +7,7 @@
 		createRender,
 		type DataBodyRow
 	} from 'svelte-headless-table';
+	import { type Class } from '$lib/ics';
 	import * as Table from '$lib/components/ui/table';
 	import DataTableActions from './DataTableActions.svelte';
 
@@ -18,7 +19,6 @@
 			cell: ({ value }) => {
 				const values = value.split(' ');
 				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
-				// return value.split(' ').splice(0, 2).join(' ');
 			}
 		}),
 		table.column({
@@ -43,9 +43,8 @@
 		table.column({
 			accessor: 'timeslot',
 			header: 'time',
-			cell: ({ value }) => {
-				return `${value.start.hour.toString().padStart(2, '0')}:${value.start.minute.toString().padStart(2, '0')} - ${value.end.hour.toString().padStart(2, '0')}:${value.end.minute.toString().padStart(2, '0')}`;
-			}
+			cell: ({ value: { start, end } }) =>
+				`${start.hour}:${start.minute.toString().padStart(2, '0')} - ${end.hour}:${end.minute.toString().padStart(2, '0')}`
 		}),
 		table.column({
 			accessor: 'uid',
@@ -80,13 +79,15 @@
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
 				<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-					<Table.Row
-						{...rowAttrs}
-						class={(row as DataBodyRow<Class>).original.removed ? 'opacity-25' : ''}
-					>
+					<Table.Row {...rowAttrs}>
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
-								<Table.Cell {...attrs}>
+								<Table.Cell
+									{...attrs}
+									class={(row as DataBodyRow<Class>).original.removed && cell.id != 'uid'
+										? 'opacity-25'
+										: ''}
+								>
 									{#if cell.id === 'uid'}
 										<Render of={cell.render()} />
 									{:else}
