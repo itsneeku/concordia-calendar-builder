@@ -4,12 +4,12 @@ import { nanoid } from 'nanoid';
 
 export type Class = {
 	name: string;
-	component: string;
 	days: days[];
 	timeslot: Timeslot;
 	location: string;
 	uid: string;
 	removed?: boolean;
+	editableCol?: string;
 };
 
 export type Timeslot = {
@@ -66,7 +66,7 @@ export const parseInput = (text: String): Class[] => {
 			} else if (courseRegex.test(line)) {
 				currentClass.name = line.split('-')[0];
 			} else if (componentRegex.test(line)) {
-				currentClass.component = line.split(' ')[0];
+				currentClass.name += ` ${line.split(' ')[0]}`;
 			}
 		} catch (err) {
 			console.error('Error parsing line:', line, '\n', err);
@@ -105,7 +105,7 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 	for (const cls of classes) {
 		if (cls.removed) continue;
 		const event: EventAttributes = {
-			title: `${cls.name} ${cls.component}`,
+			title: `${cls.name}`,
 			start: [
 				...getNextClassDate(semesterStartDate, cls.days),
 				cls.timeslot.start.hour,
@@ -130,7 +130,7 @@ export const createEventAttributes = (classes: Class[]): EventAttributes[] => {
 };
 
 const isClassFullyPopulated = (cls: Partial<Class>): cls is Class => {
-	return Boolean(cls.days && cls.timeslot && cls.location && cls.name && cls.component);
+	return Boolean(cls.days && cls.timeslot && cls.location && cls.name);
 };
 
 const getRecurrenceRule = (days: days[], semesterEndDate: DateArray): string =>

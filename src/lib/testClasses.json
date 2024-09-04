@@ -1,0 +1,146 @@
+[
+	{
+		"days": ["Wednesday"],
+		"timeslot": {
+			"start": {
+				"hour": 20,
+				"minute": 30
+			},
+			"end": {
+				"hour": 22,
+				"minute": 20
+			}
+		},
+		"location": "H 917 SGW",
+		"name": "COMP 345 LAB",
+		"uid": "25b9pOLlp4yUkXNXgJ-Rh@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Tuesday", "Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 13,
+				"minute": 15
+			},
+			"end": {
+				"hour": 14,
+				"minute": 30
+			}
+		},
+		"location": "H 507 SGW",
+		"name": "COMP 345 LEC",
+		"uid": "85Ls05ovJfwSUI-2SE0UO@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Wednesday"],
+		"timeslot": {
+			"start": {
+				"hour": 17,
+				"minute": 45
+			},
+			"end": {
+				"hour": 20,
+				"minute": 15
+			}
+		},
+		"location": "H 937 SGW",
+		"name": "COMP 348 LEC",
+		"uid": "-_Si9eGhAX_SG7hcGAW2M@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 16,
+				"minute": 15
+			},
+			"end": {
+				"hour": 17,
+				"minute": 5
+			}
+		},
+		"location": "MB S1.435 SGW",
+		"name": "COMP 348 TUT",
+		"uid": "yDNMz7Fybz7CJyrMUreM_@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 17,
+				"minute": 45
+			},
+			"end": {
+				"hour": 20,
+				"minute": 15
+			}
+		},
+		"location": "LS 210 SGW",
+		"name": "COMP 428 LEC",
+		"uid": "AvzH5SsmraWnsTptXPcUA@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 8,
+				"minute": 45
+			},
+			"end": {
+				"hour": 9,
+				"minute": 35
+			}
+		},
+		"location": "MB 2.430 SGW",
+		"name": "COMP 428 TUT",
+		"uid": "YP8Eqq7SYcW_oNjan3udD@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 20,
+				"minute": 30
+			},
+			"end": {
+				"hour": 22,
+				"minute": 20
+			}
+		},
+		"location": "H 917 SGW",
+		"name": "COMP 428 LAB",
+		"uid": "B4vsqJKA7Gb98E1ad6b84@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Monday"],
+		"timeslot": {
+			"start": {
+				"hour": 17,
+				"minute": 45
+			},
+			"end": {
+				"hour": 20,
+				"minute": 15
+			}
+		},
+		"location": "H 435 SGW",
+		"name": "COMP 432 LEC",
+		"uid": "IIR_k1FjFnZcMqdUCb5lw@concordiaCalendar.neeku.dev"
+	},
+	{
+		"days": ["Thursday"],
+		"timeslot": {
+			"start": {
+				"hour": 11,
+				"minute": 10
+			},
+			"end": {
+				"hour": 13,
+				"minute": 0
+			}
+		},
+		"location": "H 843 SGW",
+		"name": "COMP 432 LAB",
+		"uid": "MjS1mMIJDTDHql0mgseVd@concordiaCalendar.neeku.dev"
+	}
+]

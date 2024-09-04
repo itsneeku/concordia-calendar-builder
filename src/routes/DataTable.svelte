@@ -14,11 +14,12 @@
 	const table = createTable(classes);
 	const columns = table.createColumns([
 		table.column({
-			accessor: ({ name, component }) => `${name} ${component}`,
+			accessor: 'name',
 			header: 'course',
 			cell: ({ value }) => {
 				const values = value.split(' ');
-				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
+				const lastVal = values.pop();
+				return `<span class="font-semibold"> ${values.join(' ')} </span> ${lastVal}`;
 			}
 		}),
 		table.column({
