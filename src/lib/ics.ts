@@ -9,6 +9,7 @@ export type Class = {
 	timeslot: Timeslot;
 	location: string;
 	uid: string;
+	removed?: boolean;
 };
 
 export type Timeslot = {
@@ -45,8 +46,8 @@ const daysOfWeekFull = [
 	'Saturday'
 ];
 const campuses = ['SGW', 'LOY', 'TBA'];
-const courseRegex = /^[A-Za-z]{3,4} \d{3,4}/; // Tests for 3-4 letters, one space, and 3-4 digits
-const componentRegex = /\(.*\)/; // Test for opening and closing parantheses
+const courseRegex = /^[A-Za-z]{3,4} \d{3,4}/;
+const componentRegex = /\(.*\)/;
 
 export const parseInput = (text: String): Class[] => {
 	const classes: Class[] = [];
@@ -57,8 +58,8 @@ export const parseInput = (text: String): Class[] => {
 			if (daysOfWeek.some((day) => line.startsWith(day))) {
 				currentClass.days = line
 					.split(' ')[0]
-					.split('')
-					.map((code) => days[code as keyof typeof days]);
+					.match(/[A-Z][a-z]?/g)
+					?.map((day) => days[day as keyof typeof days]) as days[];
 				currentClass.timeslot = getTimeslot(line.substring(line.search(/\d/)).split(' - '));
 			} else if (campuses.some((campus) => line.endsWith(campus))) {
 				currentClass.location = line;

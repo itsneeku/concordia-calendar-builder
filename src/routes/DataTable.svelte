@@ -5,9 +5,10 @@
 		Render,
 		Subscribe,
 		createRender,
-		type ReadOrWritable
+		type ReadOrWritable,
+		DataBodyRow
 	} from 'svelte-headless-table';
-	import { type Writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
 	import DataTableActions from './DataTableActions.svelte';
 	let {
@@ -15,7 +16,7 @@
 		onRemove
 	}: {
 		classes: Writable<Class[]>;
-		onRemove: (name: string, comp: string) => void;
+		onRemove: (uid: string) => void;
 	} = $props();
 
 	$effect(() => {
@@ -25,12 +26,13 @@
 	let table = createTable(classes);
 	const columns = table.createColumns([
 		table.column({
-			accessor: 'name',
-			header: 'course'
-		}),
-		table.column({
-			accessor: 'component',
-			header: 'component'
+			accessor: ({ name, component }) => `${name} ${component}`,
+			header: 'course',
+			cell: ({ value }) => {
+				const values = value.split(' ');
+				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
+				// return value.split(' ').splice(0, 2).join(' ');
+			}
 		}),
 		table.column({
 			accessor: 'days',
@@ -46,18 +48,25 @@
 				const split = value.split(' ');
 				if (split.length > 2) {
 					const campus = split.pop();
-					return split.join(' ') + ` <span class="font-semibold">${campus}</span>`;
+					return `<span class="font-semibold">${split.join(' ')}</span> ${campus}`;
 				}
 				return value;
 			}
 		}),
 		table.column({
-			accessor: ({ name, component }) => ({ name, component }),
+			accessor: 'timeslot',
+			header: 'time',
+			cell: ({ value }) => {
+				return `${value.start.hour.toString().padStart(2, '0')}:${value.start.minute.toString().padStart(2, '0')} - ${value.end.hour.toString().padStart(2, '0')}:${value.end.minute.toString().padStart(2, '0')}`;
+			}
+		}),
+		table.column({
+			// accessor: ({ name, component }) => ({ name, component }),
+			accessor: 'uid',
 			header: '',
 			cell: ({ value }) => {
 				return createRender(DataTableActions, {
-					name: value.name,
-					comp: value.component,
+					uid: value,
 					onRemove: onRemove
 				});
 			}
@@ -86,14 +95,18 @@
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
 				<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-					<Table.Row {...rowAttrs}>
+					<Table.Row
+						{...rowAttrs}
+						class={(row as DataBodyRow<Class>).original.removed ? 'opacity-25' : ''}
+					>
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell {...attrs}>
-									{#if cell.id === 'location'}
-										{@html cell.render()}
-									{:else}
+									{#if cell.id === 'uid'}
 										<Render of={cell.render()} />
+									{:else}
+										{@html cell.render()}
+										{console.log(cell)}
 									{/if}
 								</Table.Cell>
 							</Subscribe>

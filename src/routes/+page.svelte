@@ -9,6 +9,7 @@
 	import DataTable from './DataTable.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { writable } from 'svelte/store';
+	import textData from '$lib/debuggingInput.json';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 	let fileName = 'schedule.ics'; //TODO: Based on semester
@@ -16,8 +17,9 @@
 	let showErrorInterval: number;
 	let showError = $state('');
 	let showSuccess = $state('');
-	let classes: Class[] = $state([]);
-	let classesStore = writable<Class[]>([]);
+	let classes: Class[] = $state(textData as Class[]);
+	let classesStore = writable<Class[]>(classes);
+
 	$effect(() => {
 		classesStore.set(classes);
 	});
@@ -26,7 +28,6 @@
 		e.preventDefault();
 		if (!e.clipboardData) return;
 		({ showSuccess, showError } = { showSuccess: '', showError: '' });
-		console.log(e.clipboardData);
 
 		classes = parseInput(e.clipboardData.getData('text'));
 
@@ -35,8 +36,6 @@
 			return;
 		}
 		console.log('classes:', JSON.parse(JSON.stringify(classes)));
-
-		const events: EventAttributes[] = createEventAttributes(classes);
 		showSuccess = `Schedule successfully generated!<br/>Import the .ics file to your favourite calendar app.`;
 	};
 
@@ -59,8 +58,8 @@
 	};
 </script>
 
-<section class="text-center">
-	<div class="mt-24 flex flex-col items-center">
+<section class="my-24 text-center">
+	<div class="flex flex-col items-center">
 		<h1 class="mb-4 p-2 text-center text-5xl font-semibold tracking-tight lg:text-5xl">
 			Concordia .ics Builder
 		</h1>
@@ -106,7 +105,7 @@
 	{#if showError}
 		<p transition:slide class="text-red-600 dark:text-red-400">{showError}</p>
 	{/if}
-	{#if showSuccess}
+	{#if classes.length > 0}
 		<p transition:slide class="text-green-600 dark:text-green-400">
 			{@html showSuccess}
 		</p>
@@ -115,13 +114,16 @@
 			class="my-4"
 			on:click={() => {
 				createEvents(createEventAttributes(classes), downloadIcs);
-			}}>Download</Button
+			}}>Download .ics</Button
 		>
 		<div transition:slide class="container mx-auto text-left">
 			<DataTable
 				classes={classesStore}
-				onRemove={(name: string, comp: string) => {
-					classes = classes.filter((c) => c.name !== name || c.component !== comp);
+				onRemove={(uid: string) => {
+					const classToRemove = classes.find((c) => c.uid === uid);
+					if (classToRemove) {
+						classToRemove.removed = !classToRemove.removed;
+					}
 				}}
 			/>
 		</div>

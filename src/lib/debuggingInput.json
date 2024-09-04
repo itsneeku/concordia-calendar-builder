@@ -1,0 +1,156 @@
+[
+  {
+    "days": [
+      "Monday",
+      "Wednesday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 13,
+        "minute": 15
+      },
+      "end": {
+        "hour": 14,
+        "minute": 30
+      }
+    },
+    "location": "H 110 SGW",
+    "name": "COMP 228",
+    "component": "LEC",
+    "uid": "yFc1RmjpjznD9ezR7zjR1@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Monday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 14,
+        "minute": 45
+      },
+      "end": {
+        "hour": 16,
+        "minute": 25
+      }
+    },
+    "location": "H 564 SGW",
+    "name": "COMP 228",
+    "component": "TUT",
+    "uid": "WeB6AQ5X6g44kliAf7E5j@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Wednesday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 17,
+        "minute": 45
+      },
+      "end": {
+        "hour": 20,
+        "minute": 15
+      }
+    },
+    "location": "H 937 SGW",
+    "name": "COMP 348",
+    "component": "LEC",
+    "uid": "vopqIcj50SW_dfq-FjRKI@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Thursday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 16,
+        "minute": 15
+      },
+      "end": {
+        "hour": 17,
+        "minute": 5
+      }
+    },
+    "location": "FB S113 SGW",
+    "name": "COMP 348",
+    "component": "TUT",
+    "uid": "JGs51oPsTaGKSu5EJlIro@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Thursday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 17,
+        "minute": 45
+      },
+      "end": {
+        "hour": 20,
+        "minute": 15
+      }
+    },
+    "location": "LS 207 SGW",
+    "name": "ENCS 282",
+    "component": "LEC",
+    "uid": "pI8vaU0cgsevhqWy3Z5tG@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Friday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 16,
+        "minute": 15
+      },
+      "end": {
+        "hour": 17,
+        "minute": 55
+      }
+    },
+    "location": "MB 3.255 SGW",
+    "name": "ENCS 282",
+    "component": "TUT",
+    "uid": "KhLQHsutcpTYcu9t09I6x@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Tuesday",
+      "Thursday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 14,
+        "minute": 45
+      },
+      "end": {
+        "hour": 16,
+        "minute": 0
+      }
+    },
+    "location": "MB S2.210 SGW",
+    "name": "MATH 203",
+    "component": "LEC",
+    "uid": "WwUlwP12gGF8UX38aO88o@concordiaCalendar.neeku.dev"
+  },
+  {
+    "days": [
+      "Wednesday"
+    ],
+    "timeslot": {
+      "start": {
+        "hour": 16,
+        "minute": 15
+      },
+      "end": {
+        "hour": 17,
+        "minute": 30
+      }
+    },
+    "location": "MB 1.210 SGW",
+    "name": "MATH 203",
+    "component": "TUT",
+    "uid": "Z_XO1dc2XIRxDEHW-7WCQ@concordiaCalendar.neeku.dev"
+  }
+]
