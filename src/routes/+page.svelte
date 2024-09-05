@@ -9,6 +9,7 @@
 	import DataTable from './DataTable.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { classes } from '../stores';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 
 	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
 	let fileName = 'schedule.ics'; //TODO: Based on semester
@@ -67,17 +68,18 @@
 				on:paste={handlePaste}
 				on:keypress={(e) => e.preventDefault()}
 			></Input>
-			<Tooltip.Root openDelay={100} closeOnPointerDown={false}>
-				<Tooltip.Trigger>
+
+			<Popover.Root portal={null}>
+				<Popover.Trigger>
 					<CircleHelp strokeWidth={1.75} />
-				</Tooltip.Trigger>
-				<Tooltip.Content
+				</Popover.Trigger>
+				<Popover.Content
+					class=" w-96 text-wrap text-left"
 					side="bottom"
-					class=" max-h-fit max-w-fit text-wrap text-justify"
 					fitViewport={true}
 					overlap={true}
 				>
-					<ol class=" text-md list-inside list-decimal space-y-1 p-2">
+					<ol class="list-inside list-decimal space-y-1 p-2">
 						<li>
 							Go to your <a
 								class="underline"
@@ -95,8 +97,8 @@
 							class="p-2"
 						/>
 					</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
+				</Popover.Content>
+			</Popover.Root>
 		</form>
 	</div>
 	{#if showError}
