@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { slide } from 'svelte/transition';
+	const calendars = ['Google Calendar', 'Apple Calendar', 'Microsoft Outlook', 'Samsung Calendar'];
+	const interval = 2000;
 
-	let { data, interval }: { data: any[]; interval: number } = $props();
 	let index = $state(0);
 	let roller: number;
 
 	onMount(() => {
 		roller = setInterval(() => {
-			if (index === data.length - 1) index = 0;
-			else index++;
+			index = (index + 1) % calendars.length;
 		}, interval);
 	});
 
@@ -19,5 +19,5 @@
 </script>
 
 {#key index}
-	<div transition:slide>{data[index]}</div>
+	<div transition:slide>{calendars[index]}</div>
 {/key}

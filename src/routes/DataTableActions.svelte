@@ -2,18 +2,18 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Plus, X } from 'lucide-svelte';
-	import { classes } from '../stores';
+	import { classes } from '../lib/stores';
 
 	export let uid: string;
 
 	const updateStore = () => {
-		classes.update((existingStore) => {
-			existingStore.forEach((c) => {
+		classes.update((cls) => {
+			cls.forEach((c) => {
 				if (c.uid === uid) {
 					c.removed = !c.removed;
 				}
 			});
-			return existingStore;
+			return cls;
 		});
 	};
 </script>
