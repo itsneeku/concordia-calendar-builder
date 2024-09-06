@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { classes } from '../stores';
+	import { classes } from '../lib/stores';
 	import {
 		createTable,
 		Render,
@@ -7,18 +7,21 @@
 		createRender,
 		type DataBodyRow
 	} from 'svelte-headless-table';
-	import { type Class } from '$lib/ics';
+	import { type Class } from '$lib/types';
 	import * as Table from '$lib/components/ui/table';
 	import DataTableActions from './DataTableActions.svelte';
 
 	const table = createTable(classes);
 	const columns = table.createColumns([
 		table.column({
-			accessor: ({ name, component }) => `${name} ${component}`,
+			accessor: 'name',
 			header: 'course',
 			cell: ({ value }) => {
 				const values = value.split(' ');
-				return `<span class="font-semibold"> ${values[0]} ${values[1]} </span> ${values[2]}`;
+				if (values.length == 3) {
+					const lastVal = values.pop();
+					return `<span class="font-semibold"> ${values.join(' ')} </span> ${lastVal}`;
+				} else return `${values.join(' ')}`;
 			}
 		}),
 		table.column({
@@ -44,7 +47,7 @@
 			accessor: 'timeslot',
 			header: 'time',
 			cell: ({ value: { start, end } }) =>
-				`${start.hour}:${start.minute.toString().padStart(2, '0')} - ${end.hour}:${end.minute.toString().padStart(2, '0')}`
+				`${start.hour.toString().padStart(2, '0')}:${start.minute.toString().padStart(2, '0')} - ${end.hour.toString().padStart(2, '0')}:${end.minute.toString().padStart(2, '0')}`
 		}),
 		table.column({
 			accessor: 'uid',
@@ -59,7 +62,7 @@
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } = table.createViewModel(columns);
 </script>
 
-<div class="rounded-lg border">
+<div class=" xs:w-auto w-9/12 rounded-lg border">
 	<Table.Root {...$tableAttrs}>
 		<Table.Header>
 			{#each $headerRows as headerRow}

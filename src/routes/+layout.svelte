@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import Header from './Header.svelte';
+	import Header from '../lib/components/schedule/header.svelte';
 </script>
 
 <div class="flex min-h-screen flex-col p-2">
