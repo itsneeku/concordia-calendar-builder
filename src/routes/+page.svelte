@@ -9,6 +9,7 @@
 	import SemesterSettings from './SemesterSettings.svelte';
 	import CoursesTable from '$lib/components/schedule/courses-table.svelte';
 
+
 	const downloadIcs = (error: any, value: String) => {
 		if (error) {
 			console.error(error);
