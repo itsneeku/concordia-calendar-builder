@@ -3,10 +3,8 @@
 	import { createEventAttributes } from '$lib';
 	import { slide } from 'svelte/transition';
 	import { createEvents } from 'ics';
-	import DataTable from './DataTable.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { classes } from '../lib/stores';
-	import SemesterSettings from './SemesterSettings.svelte';
 	import CoursesTable from '$lib/components/schedule/courses-table.svelte';
 
 
@@ -32,7 +30,6 @@
 			variant="outline"
 			class="mb-8 mt-4"
 			on:click={() => {
-				// console.log(createEventAttributes($classes));
 				createEvents(createEventAttributes($classes), downloadIcs);
 			}}>Download .ics</Button
 		>

@@ -2,8 +2,11 @@ export type Class = {
 	[key: string]: any;
 	name: string;
 	days: Days[];
+
+	// Why time as a string? For svelte store data binding purposes, since <input type="time"> returns a 24hr string
 	startTime: string;
 	endTime: string;
+
 	timeslot: Timeslot;
 	location: string;
 	uid: string;
@@ -30,7 +33,7 @@ export const createTimeslot = (text: string[]): string[] => {
 		let [hour, minute] = time.split(':').map((n) => parseInt(n));
 		if (time.toLowerCase().includes('pm') && hour !== 12) hour += 12;
 		if (time.toLowerCase().includes('am') && hour === 12) hour = 0;
-		return `${hour}:${minute}`;
+		return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 	};
 
 	const formatTime = (time: { hour: number; minute: number }): string => {

@@ -75,6 +75,9 @@ export const getRecurrenceRule = (days: Days[], semesterEndDate: DateArray): str
 	UNTIL=${semesterEndDate[0]}${semesterEndDate[1]}0${semesterEndDate[2]}
 	`.replace(/\s/g, '');
 const semesterStartDate: DateArray = [2024, 9, 3];
+// new Date(Date.parse("2024-09-03 EST")); => Tue Sep 03 2024 01:00:00 GMT....
+// Complete date picker component first and set date according to it (for binding purposes)
+// TODO: Make everything in concordia's local time (EST), not GMT
 const semesterEndDate: DateArray = [2024, 12, 3];
 
 export const campuses = ['SGW', 'LOY', 'TBA'];

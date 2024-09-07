@@ -25,6 +25,9 @@
 			return;
 		}
 
+		console.log('Input', e.clipboardData.getData('text'));
+		console.log('Classes', $classes);
+
 		showError = '';
 	};
 
