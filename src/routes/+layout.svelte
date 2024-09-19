@@ -7,9 +7,6 @@
 	interface LayoutProps {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		children: any;
-		data: {
-			url: string;
-		};
 	}
 
 	let { children }: LayoutProps = $props();
