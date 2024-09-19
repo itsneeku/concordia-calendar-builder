@@ -16,6 +16,18 @@ const config = {
 		paths: {
 			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 		}
+	},
+	compilerOptions: {
+		runes: true
+	},
+	vitePlugin: {
+		dynamicCompileOptions({ filename }) {
+			if (filename.includes('node_modules') || filename.includes('components/ui')) {
+				return {
+					runes: false
+				};
+			}
+		}
 	}
 };
 
