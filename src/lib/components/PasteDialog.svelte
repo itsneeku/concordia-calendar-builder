@@ -27,7 +27,7 @@
 			toast.error('Could not figure out what classes you got :(');
 		}
 	};
-	let innerWidth = $state(0);
+	let innerWidth = $state() as number;
 
 	let scheduleTable = $derived(innerWidth < 640 ? scheduleTableMobile : scheduleTableDesktop);
 </script>
