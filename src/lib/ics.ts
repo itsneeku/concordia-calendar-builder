@@ -3,7 +3,7 @@ import { CalendarDateTime, getDayOfWeek } from '@internationalized/date';
 import { getVtimezoneComponent } from '@touch4it/ical-timezones';
 import ical, { ICalEventRepeatingFreq, ICalWeekday } from 'ical-generator';
 
-const timezone = 'America/Montreal';
+const timezone = 'America/Toronto';
 
 export const getICS = (courses: Course[], semester: Semester): string => {
 	const calendar = ical().timezone({
@@ -28,7 +28,7 @@ export const getICS = (courses: Course[], semester: Semester): string => {
 				exclude: semester.excludedDates.map((date) => date.set(startTime).toDate(timezone))
 			},
 			timezone: timezone,
-			location: course.location,
+			location: course.location
 		});
 	}
 	return calendar.toString();
