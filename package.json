@@ -41,7 +41,6 @@
 	"dependencies": {
 		"@internationalized/date": "^3.5.5",
 		"@sveltejs/adapter-static": "^3.0.5",
-		"@touch4it/ical-timezones": "^1.9.0",
 		"bits-ui": "^0.21.15",
 		"clsx": "^2.1.1",
 		"ical-generator": "^8.0.0",
@@ -50,6 +49,7 @@
 		"nanoid": "^5.0.7",
 		"svelte-sonner": "^0.3.28",
 		"tailwind-merge": "^2.5.2",
-		"tailwind-variants": "^0.2.1"
+		"tailwind-variants": "^0.2.1",
+		"timezones-ical-library": "^1.8.3"
 	}
 }

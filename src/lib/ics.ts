@@ -1,14 +1,14 @@
 import { days, type Course, type Semester } from '$lib';
 import { CalendarDateTime, getDayOfWeek } from '@internationalized/date';
-import { getVtimezoneComponent } from '@touch4it/ical-timezones';
 import ical, { ICalEventRepeatingFreq, ICalWeekday } from 'ical-generator';
+import { tzlib_get_ical_block } from 'timezones-ical-library';
 
 const timezone = 'America/Toronto';
 
 export const getICS = (courses: Course[], semester: Semester): string => {
 	const calendar = ical().timezone({
 		name: timezone,
-		generator: getVtimezoneComponent
+		generator: (timezone: string) => tzlib_get_ical_block(timezone)[0]
 	});
 
 	for (const course of courses) {
@@ -27,7 +27,6 @@ export const getICS = (courses: Course[], semester: Semester): string => {
 				until: semester.endDate.add({ days: 1 }).toDate(timezone),
 				exclude: semester.excludedDates.map((date) => date.set(startTime).toDate(timezone))
 			},
-			timezone: timezone,
 			location: course.location
 		});
 	}
