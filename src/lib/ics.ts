@@ -27,7 +27,8 @@ export const getICS = (courses: Course[], semester: Semester): string => {
 				until: semester.endDate.add({ days: 1 }).toDate(timezone),
 				exclude: semester.excludedDates.map((date) => date.set(startTime).toDate(timezone))
 			},
-			timezone: timezone
+			timezone: timezone,
+			location: course.location,
 		});
 	}
 	return calendar.toString();
