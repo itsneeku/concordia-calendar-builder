@@ -12,6 +12,7 @@ export const getICS = (courses: Course[], semester: Semester): string => {
 	});
 
 	for (const course of courses) {
+		if (Object.keys(course).length === 0) continue;
 		const startTime = getTimeObject(course.startTime);
 		const endTime = getTimeObject(course.endTime);
 
