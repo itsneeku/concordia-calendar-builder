@@ -39,6 +39,11 @@
 			return;
 		}
 
+		if (formData.startTime >= formData.endTime) {
+			toast.error('Start time must precede end time');
+			return;
+		}
+
 		formData.uid ||= `${nanoid()}@concordiaCalendar.neeku.dev`;
 		const index = courses.findIndex((c) => c.uid === formData.uid);
 
@@ -49,6 +54,7 @@
 		}
 
 		// Dont update days if unchanged
+		// TODO: Still needed if we key on uid?
 		if (courses[index].days.toString() === formData.days?.toString()) {
 			delete (formData as Partial<Course>).days;
 		} else {
@@ -56,6 +62,7 @@
 		}
 
 		// Update each key rather than reassigning object
+		// TODO: Still needed if we key on uid?
 		Object.keys(formData).forEach((key) => {
 			courses[index][key] = formData[key];
 		});
