@@ -15,6 +15,10 @@
 	let { selectedCourse = $bindable({}), ...props }: Props = $props();
 
 	const onDownload = () => {
+		if (courses.length === 0) {
+			toast.error('No courses to download');
+			return;
+		}
 		try {
 			const blob = new Blob([getICS(courses, appState.semester)], {
 				type: 'text/calendar'

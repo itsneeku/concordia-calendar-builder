@@ -21,9 +21,7 @@
 	let formData: Partial<Course> = $state($state.snapshot(course)) as Partial<Course>;
 
 	$effect(() => {
-		console.log('in effect');
 		if (course != null) {
-			console.log('in effect if');
 			open = true;
 			formData = $state.snapshot(course);
 		}

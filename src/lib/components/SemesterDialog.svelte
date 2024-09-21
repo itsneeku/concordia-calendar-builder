@@ -67,7 +67,7 @@
 		if (!e) return;
 		excludedDates.push(e);
 		excludedDates.sort((a, b) => {
-			if (a === null) return 1; 
+			if (a === null) return 1;
 			if (b === null) return -1;
 			return a.compare(b ?? a);
 		});
@@ -118,6 +118,7 @@
 						</Popover.Trigger>
 						<Popover.Content class="w-auto p-0" sideOffset={4} align="start">
 							<Calendar
+								isDateDisabled={(date: DateValue) => date.compare(formData.endDate) >= 0}
 								preventDeselect
 								bind:value={formData.startDate as DateValue}
 								onValueChange={onCustomDateChange}
@@ -142,6 +143,7 @@
 						</Popover.Trigger>
 						<Popover.Content class="w-auto p-0" sideOffset={4} align="end">
 							<Calendar
+								isDateDisabled={(date: DateValue) => date.compare(formData.startDate) <= 0}
 								preventDeselect
 								bind:value={formData.endDate as DateValue}
 								onValueChange={onCustomDateChange}
@@ -195,7 +197,15 @@
 								>
 							</Popover.Trigger>
 							<Popover.Content class="w-auto p-0" sideOffset={4} align="center">
-								<Calendar preventDeselect onValueChange={onAddExcludedDate} initialFocus />
+								<Calendar
+									preventDeselect
+									onValueChange={onAddExcludedDate}
+									initialFocus
+									isDateDisabled={(date: DateValue) =>
+										date.compare(formData.startDate) < 0 ||
+										date.compare(formData.endDate) > 0 ||
+										excludedDates.some((d) => d?.compare(date) === 0)}
+								/>
 							</Popover.Content>
 						</Popover.Root>
 					</Accordion.Content>
