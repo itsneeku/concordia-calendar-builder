@@ -12,23 +12,27 @@ export const getICS = (courses: Course[], semester: Semester): string => {
 	});
 
 	for (const course of courses) {
-		const firstDayOfClass = getNextDateOfWeekDay(semester.startDate, course.days[0]);
 		const startTime = getTimeObject(course.startTime);
 		const endTime = getTimeObject(course.endTime);
 
-		calendar.createEvent({
-			summary: course.name,
-			id: course.uid,
-			start: firstDayOfClass.set(startTime).toDate(timezone),
-			end: firstDayOfClass.set(endTime).toDate(timezone),
-			repeating: {
-				freq: ICalEventRepeatingFreq.WEEKLY,
-				byDay: course.days as ICalWeekday[],
-				until: semester.endDate.add({ days: 1 }).toDate(timezone),
-				exclude: semester.excludedDates.map((date) => date.set(startTime).toDate(timezone))
-			},
-			location: course.location
-		});
+		for (const range of getSplitDateRanges(
+			getNextDateOfWeekDay(semester.startDate, course.days[0]),
+			semester.excludedDates,
+			semester.endDate
+		)) {
+			const firstDay = getNextDateOfWeekDay(range[0], course.days[0]);
+			calendar.createEvent({
+				summary: course.name,
+				start: firstDay.set(startTime).toDate(timezone),
+				end: firstDay.set(endTime).toDate(timezone),
+				location: course.location,
+				repeating: {
+					freq: ICalEventRepeatingFreq.WEEKLY,
+					byDay: course.days as ICalWeekday[],
+					until: range[1].set(endTime).toDate(timezone)
+				}
+			});
+		}
 	}
 	return calendar.toString();
 };
@@ -40,4 +44,21 @@ const getNextDateOfWeekDay = (date: CalendarDateTime, day: string): CalendarDate
 
 const getTimeObject = (time: string) => {
 	return Object.fromEntries(time.split(':').map((v, i) => [i ? 'minute' : 'hour', Number(v)]));
+};
+
+const getSplitDateRanges = (
+	firstDay: CalendarDateTime,
+	excludedDates: CalendarDateTime[],
+	finalDay: CalendarDateTime
+): [CalendarDateTime, CalendarDateTime][] => {
+	const repeatingRanges = [];
+	let startDate = firstDay;
+	for (const excludedDate of excludedDates) {
+		if (startDate.compare(excludedDate) < 0) {
+			repeatingRanges.push([startDate, excludedDate.add({ days: -1 })]);
+		}
+		startDate = excludedDate.add({ days: 1 });
+	}
+	repeatingRanges.push([startDate, finalDay]);
+	return repeatingRanges as [CalendarDateTime, CalendarDateTime][];
 };

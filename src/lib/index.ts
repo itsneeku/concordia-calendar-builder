@@ -1,4 +1,4 @@
-import { CalendarDateTime, type DateValue } from '@internationalized/date';
+import { CalendarDateTime } from '@internationalized/date';
 
 export type Course = {
 	[key: string]: unknown;
@@ -14,7 +14,7 @@ export type Semester = {
 	name: string;
 	startDate: CalendarDateTime;
 	endDate: CalendarDateTime;
-	excludedDates: DateValue[];
+	excludedDates: CalendarDateTime[];
 };
 
 export const rangeToDates = (

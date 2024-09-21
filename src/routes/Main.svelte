@@ -27,21 +27,23 @@
 <Title
 	class="flex h-3/4 flex-col items-center justify-center rounded-lg border border-border bg-border bg-opacity-15"
 />
-<div
-	class="flex h-1/4 flex-col items-center justify-center space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
->
-	<Button class="h-12 w-60" variant="outline" onclick={onClickPaste}>Paste Schedule</Button>
+<div class="flex h-1/4 flex-col items-center justify-center">
+	<div class="flex flex-col sm:flex-row">
+		<Button class="m-1 h-12 w-60" variant="outline" onclick={onClickPaste}>Paste Schedule</Button>
 
-	<Button class="h-12 w-60" variant="outline" onclick={onClickUpload}>
-		<span>
-			{#key uploadScreenshotText}
-				<div transition:slide>{uploadScreenshotText}</div>
-			{/key}
-		</span>
-	</Button>
-	<Button class="h-12 w-fit" variant="link" on:click={() => (appState.manualMode = true)}
-		>Manual Mode</Button
-	>
+		<Button class="m-1 h-12 w-60" variant="outline" onclick={onClickUpload}>
+			<span>
+				{#key uploadScreenshotText}
+					<div transition:slide>{uploadScreenshotText}</div>
+				{/key}
+			</span>
+		</Button>
 
-	<PasteDialog bind:open={uploadDialogOpen} />
+		<PasteDialog bind:open={uploadDialogOpen} />
+	</div>
+	<div>
+		<Button class="m-1 h-12 w-fit" variant="link" on:click={() => (appState.manualMode = true)}
+			>Manual Mode</Button
+		>
+	</div>
 </div>
