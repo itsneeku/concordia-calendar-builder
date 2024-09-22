@@ -2,9 +2,16 @@
 
 Easily add your Concordia schedule to your favourite calendar app.
 
-This tool helps you generate an iCalendar (.ics) ([RFC5545](https://datatracker.ietf.org/doc/html/rfc5545)) from your Student Centre's course schedule that you can import into Google Calendar, Apple Calendar, Microsoft Outlook, Samsung Calendar, and more.
-
 [Live deployment](https://concordia.neeku.dev/)
+
+<p align="middle">
+  <img src="/static/ss-1-main.png" width="24%"/>
+  <img src="/static/ss-2-configure.png" width="24%" /> 
+  <img src="/static/ss-3-course-dialog.png" width="24%" />
+  <img src="/static/ss-4-semester-dialog.png" width="24%" />
+</p>
+
+This tool helps you generate an iCalendar (.ics) ([RFC5545](https://datatracker.ietf.org/doc/html/rfc5545)) from your Student Centre's course schedule that you can import into Google Calendar, Apple Calendar, Microsoft Outlook, Samsung Calendar, and more.
 
 ## Features
 
