@@ -1,0 +1,5 @@
+# https://developers.cloudflare.com/workers/wrangler/configuration/
+name = "concordia-ics-builder"
+
+[vars]
+NODE_VERSION = 22
