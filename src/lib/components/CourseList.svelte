@@ -4,7 +4,11 @@
 	import { getICS } from '$lib/ics';
 	import { appState, courses } from '$lib/state.svelte';
 	import { customSlideIn, customSlideInstantIn, customSlideOut } from '$lib/transitions';
-	import { Calendar, CalendarArrowDown, Clock, Plus, Settings2 } from 'lucide-svelte';
+	import Calendar from 'lucide-svelte/icons/calendar';
+	import CalendarArrowDown from 'lucide-svelte/icons/calendar-arrow-down';
+	import Clock from 'lucide-svelte/icons/clock';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Settings2 from 'lucide-svelte/icons/settings';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {

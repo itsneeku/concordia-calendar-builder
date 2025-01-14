@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import tailwindcssAnimate from 'tailwindcss-animate';
 import { fontFamily } from 'tailwindcss/defaultTheme';
 
 const config: Config = {
@@ -48,21 +49,19 @@ const config: Config = {
 					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
 					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
 				},
-				'solid-pink': {
-					'50': '#fdf4f3',
-					'100': '#fce7e7',
-					'200': '#f8d3d4',
-					'300': '#f3aeb1',
-					'400': '#eb8187',
-					'500': '#df5460',
-					'600': '#ca3448',
-					'700': '#aa263b',
-					'800': '#912338',
-					'900': '#7a2134',
-					'950': '#440d18'
+				sidebar: {
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
 				}
 			},
 			borderRadius: {
+				xl: 'calc(var(--radius) + 4px)',
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
@@ -70,9 +69,29 @@ const config: Config = {
 			fontFamily: {
 				sans: ['Inter', ...fontFamily.sans],
 				serif: ['Sprat', ...fontFamily.serif]
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--bits-accordion-content-height)' }
+				},
+				'accordion-up': {
+					from: { height: 'var(--bits-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'caret-blink': {
+					'0%,70%,100%': { opacity: '1' },
+					'20%,50%': { opacity: '0' }
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'caret-blink': 'caret-blink 1.25s ease-out infinite'
 			}
 		}
-	}
+	},
+	plugins: [tailwindcssAnimate]
 };
 
 export default config;
