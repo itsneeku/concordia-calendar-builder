@@ -1,0 +1,27 @@
+name: Get Latest University Holidays
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  get-holidays:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Fetch latest holidays
+        run: node fetchHolidays.js
+
+      - name: Upload JSON file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: holidays
+          path: holidays.json
