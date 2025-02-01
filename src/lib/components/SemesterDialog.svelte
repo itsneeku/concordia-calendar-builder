@@ -11,7 +11,12 @@
 	import { Separator } from '$lib/components/ui/separator/';
 	import { appState } from '$lib/state.svelte';
 	import { customSlideInstantIn, customSlideOut } from '$lib/transitions';
-	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
+	import {
+		CalendarDateTime,
+		DateFormatter,
+		getLocalTimeZone,
+		type DateValue
+	} from '@internationalized/date';
 	import type { Selected } from 'bits-ui';
 	import { X } from 'lucide-svelte';
 	import CalendarIcon from 'lucide-svelte/icons/calendar';
@@ -65,7 +70,7 @@
 
 	const onAddExcludedDate = (e: DateValue | undefined) => {
 		if (!e) return;
-		excludedDates.push(e);
+		excludedDates.push(e as CalendarDateTime);
 		excludedDates.sort((a, b) => {
 			if (a === null) return 1;
 			if (b === null) return -1;
@@ -153,7 +158,7 @@
 					</Popover.Root>
 				</div>
 			</div>
-			<Accordion.Root>
+			<!-- <Accordion.Root>
 				<Accordion.Item value="excludedDates">
 					<Accordion.Trigger
 						><Label for="excludedDates" class="cursor-pointer"
@@ -210,7 +215,7 @@
 						</Popover.Root>
 					</Accordion.Content>
 				</Accordion.Item>
-			</Accordion.Root>
+			</Accordion.Root> -->
 		</div>
 		<Dialog.Footer>
 			<Button class="h-12" onclick={handleSave}>Save</Button>

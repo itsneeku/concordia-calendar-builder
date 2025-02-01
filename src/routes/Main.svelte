@@ -5,7 +5,6 @@
 	import { appState } from '$lib/state.svelte';
 	import { slide } from 'svelte/transition';
 
-	// let manualMode = appState.isManualMode;
 	let uploadDialogOpen = $state(false);
 
 	let uploadScreenshotText = $state('Upload Screenshot');

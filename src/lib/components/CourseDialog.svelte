@@ -66,7 +66,6 @@
 		Object.keys(formData).forEach((key) => {
 			courses[index][key] = formData[key];
 		});
-
 		closeDialog();
 	};
 
@@ -91,11 +90,11 @@
 		<div class="flex flex-col gap-4 pt-4">
 			<div class="flex flex-col gap-1.5">
 				<Label for="courseName" class="text-left">Course</Label>
-				<Input id="courseName" bind:value={formData.name} autocomplete="no" />
+				<Input id="courseName" bind:value={formData.name} autocomplete="off" />
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<Label for="location" class="text-left">Location</Label>
-				<Input id="location" bind:value={formData.location} autocomplete="no" />
+				<Input id="location" bind:value={formData.location} autocomplete="off" />
 			</div>
 
 			<div class="flex flex-col gap-1.5">

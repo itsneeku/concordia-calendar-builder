@@ -1,4 +1,26 @@
+import holidays from '$lib/holidays.json';
+import semesters from '$lib/semesters.json';
 import { CalendarDateTime } from '@internationalized/date';
+
+const semestersData: Semesters = semesters;
+const holidaysData: Holidays = holidays;
+const uniDateZero = new CalendarDateTime(2007, 12, 31);
+
+const dateToCalendarDateTime = (date: string): CalendarDateTime => {
+	const [day, month, year] = date.split('/').map(Number);
+	return new CalendarDateTime(year, month, day);
+};
+
+type Holidays = {
+	[key: string]: string;
+};
+
+type Semesters = {
+	[key: string]: {
+		startDate: string;
+		endDate: string;
+	};
+};
 
 export type Course = {
 	[key: string]: unknown;
@@ -33,23 +55,9 @@ export const rangeToDates = (
 
 export const days: string[] = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 export const campuses = ['SGW', 'LOY', 'TBA'];
-export const presetSemesters: Semester[] = [
-	{
-		name: 'Fall 2024',
-		startDate: new CalendarDateTime(2024, 9, 2),
-		endDate: new CalendarDateTime(2024, 12, 2),
-		excludedDates: [
-			new CalendarDateTime(2024, 9, 2), // Labour Day
-			new CalendarDateTime(2024, 10, 14), // Thanksgiving
-			...rangeToDates(new CalendarDateTime(2024, 10, 15), new CalendarDateTime(2024, 10, 20)) // Reading Week
-		]
-	},
-	{
-		name: 'Winter 2025',
-		startDate: new CalendarDateTime(2025, 1, 13),
-		endDate: new CalendarDateTime(2025, 4, 12),
-		excludedDates: [
-			...rangeToDates(new CalendarDateTime(2025, 1, 24), new CalendarDateTime(2025, 2, 2)) // Reading Week
-		]
-	}
-];
+export const presetSemesters: Semester[] = Object.keys(semestersData).map((semester) => ({
+	name: semester,
+	startDate: dateToCalendarDateTime(semestersData[semester].startDate),
+	endDate: dateToCalendarDateTime(semestersData[semester].endDate),
+	excludedDates: Object.keys(holidaysData).map((date) => uniDateZero.add({ days: Number(date) }))
+}));

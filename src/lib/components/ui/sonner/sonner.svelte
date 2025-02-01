@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { Toaster as Sonner, type ToasterProps as SonnerProps } from 'svelte-sonner';
 	import { mode } from 'mode-watcher';
-
-	type $$Props = SonnerProps;
 </script>
 
 <Sonner
@@ -17,5 +15,7 @@
 			cancelButton: 'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground'
 		}
 	}}
-	{...$$restProps}
+	duration={2000}
+	position="top-center"
+	richColors
 />

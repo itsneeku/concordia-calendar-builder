@@ -13,7 +13,7 @@
 </script>
 
 <div>
-	<Toaster duration={2000} position="top-center" richColors />
+	<Toaster />
 	<!-- max-w-full overflow-x-hidden  -->
 	<ModeWatcher />
 	<Header />
