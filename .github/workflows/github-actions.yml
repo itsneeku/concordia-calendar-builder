@@ -8,6 +8,8 @@ on:
 jobs:
   get-holidays:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -27,7 +29,9 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add ./src/lib/holidays.json
           git diff --cached --quiet || (git commit -m "Automatically update holidays.json" && git push)
+      - name: Push changes
+        uses: ad-m/github-push-action@master
