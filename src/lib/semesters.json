@@ -1,0 +1,26 @@
+{
+  "Summer 2024 (12 week)": {
+    "startDate": "08/05/2024",
+    "endDate": "12/08/2024"
+  },
+  "Summer 2024 (Six week - first)": {
+    "startDate": "08/05/2024",
+    "endDate": "18/06/2024"
+  },
+  "Summer 2024 (Six week - second)": {
+    "startDate": "02/07/2024",
+    "endDate": "12/08/2024"
+  },
+  "Fall 2024 (12 week)": {
+    "startDate": "03/09/2024",
+    "endDate": "02/12/2024"
+  },
+  "Fall/Winter 2024-25 (24 week)": {
+    "startDate": "03/09/2024",
+    "endDate": "12/04/2025"
+  },
+  "Winter 2025 (12 week)": {
+    "startDate": "13/01/2025",
+    "endDate": "12/04/2025"
+  }
+}
