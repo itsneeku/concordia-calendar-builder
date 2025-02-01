@@ -90,7 +90,7 @@
 <Dialog.Root bind:open={appState.semesterDialog} {onOpenChange} openFocus={'#content-div'}>
 	<Dialog.Content class="max-w-sm rounded-lg" id="content-div">
 		<Dialog.Header>
-			<Dialog.Title class="text-center">Semester</Dialog.Title>
+			<Dialog.Title class="text-center">Semester Dates</Dialog.Title>
 		</Dialog.Header>
 		<div class="flex flex-col gap-4 pt-4">
 			<div class="flex flex-col gap-1.5">

@@ -41,20 +41,24 @@
 <div class="flex flex-col space-y-6 {props.class}">
 	<div class="flex space-x-6">
 		<Card.Root
-			class="size-full  bg-border bg-opacity-15 px-8 py-4 hover:bg-opacity-100"
+			class="w-1/2 flex-1 bg-border bg-opacity-15 px-8 py-4 hover:bg-opacity-100"
 			onclick={() => (appState.semesterDialog = true)}
 		>
 			<Card.Content class="p-0">
-				<div class="flex items-center justify-center"><Settings2 class="h-5 w-5" /></div>
+				<div class="flex items-center justify-center gap-4">
+					<Settings2 class="h-5 w-5" />
+				</div>
 			</Card.Content>
 		</Card.Root>
 
 		<Card.Root
-			class="size-full bg-border bg-opacity-15 px-8 py-4 hover:bg-opacity-100"
+			class="w-1/2 flex-1 bg-border bg-opacity-15 px-8 py-4 hover:bg-opacity-100"
 			onclick={onDownload}
 		>
 			<Card.Content class="p-0">
-				<div class="flex items-center justify-center"><CalendarArrowDown class="h-5 w-5" /></div>
+				<div class="flex items-center justify-center gap-4">
+					<CalendarArrowDown class="h-5 w-5" />
+				</div>
 			</Card.Content>
 		</Card.Root>
 	</div>
@@ -84,26 +88,30 @@
 						</div>
 
 						<div class="order-3">
-							{#key course.days}
-								<div class="flex gap-[0.2rem]" in:customSlideIn out:customSlideOut>
-									<Calendar class="h-4 w-4 self-center" />
-
-									{#each days as day}
-										<span class={course.days.includes(day) ? 'opacity-100' : 'opacity-50'}>
-											{day.substring(0, 1)}
-										</span>
-									{/each}
-								</div>
-							{/key}
+							<div class="flex gap-[0.2rem]">
+								<Calendar class="h-4 w-4 self-center" />
+								{#key course.days}
+									<div in:customSlideIn out:customSlideOut class="flex gap-[0.2rem]">
+										{#each days as day}
+											<span class={`${course.days.includes(day) ? 'opacity-100' : 'opacity-50'}`}>
+												{day.substring(0, 1)}
+											</span>
+										{/each}
+									</div>
+								{/key}
+							</div>
 						</div>
 
-						<div class="order-4 justify-self-end">
-							{#key course.startTime + course.endTime}
-								<div class="flex gap-1" in:customSlideIn out:customSlideOut>
-									<Clock class="h-4 w-4 self-center" />
-									<span class="w-26">{course.startTime} - {course.endTime}</span>
-								</div>
-							{/key}
+						<div class="order-4 grid grid-flow-col gap-1 justify-self-end">
+							<Clock class="h-4 w-4 self-center" />
+
+							<div class="w-26">
+								{#key course.startTime + course.endTime}
+									<div class="flex gap-1" in:customSlideIn out:customSlideOut>
+										<span>{course.startTime} - {course.endTime}</span>
+									</div>
+								{/key}
+							</div>
 						</div>
 					</Card.Content>
 				</Card.Root>
