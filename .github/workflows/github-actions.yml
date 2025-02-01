@@ -1,4 +1,4 @@
-name: Update holidays.json
+name: Update university dates
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  get-holidays:
+  get-dates:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,18 +20,20 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Fetch latest holidays
-        run: node ./.github/workflows/fetchHolidays.js
+      - name: Fetch latest university dates
+        run: node ./.github/workflows/fetchUniDates.js
 
-      - name: Move holidays.json to $lib
+      - name: Move holidays.json and semesters.json to $lib
         run: |
           mv holidays.json ./src/lib/holidays.json
+          mv semesters.json ./src/lib/semesters.json
 
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add ./src/lib/holidays.json
-          git diff --cached --quiet || (git commit -m "cicd: automatically update holidays.json" && git push)
+          git add ./src/lib/semesters.json
+          git diff --cached --quiet || (git commit -m "cicd: automatically update holidays.json and semesters.json" && git push)
       - name: Push changes
         uses: ad-m/github-push-action@master
