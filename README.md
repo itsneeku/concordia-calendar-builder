@@ -16,7 +16,8 @@ This tool helps you generate an iCalendar (.ics) ([RFC5545](https://datatracker.
 ## Features
 
 - Parse schedule data from [Student Center > Academics](https://campus.concordia.ca/psc/pscsprd/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_STUDENT_CENTER.GBL?Page=SSS_STUDENT_CENTER&Action=U&TargetFrameName=None) or add courses manually. Screenshots parsing is WIP.
-- Manage semesters and days off, courses, and their locations, days, and times.
+- Manage semesters, courses, and their locations, days, and times.
 - Generate valid iCalendar files as per ([RFC7986](https://datatracker.ietf.org/doc/html/rfc7986)).
 - Compatible with .ics importing quirks (misbehaving EXDATE) on Android and iOS.
-- Always use Concordia's local time zone (America/Toronto).
+- Always uses Concordia's local time zone (America/Toronto).
+- Dynamically fetches Concordia University latest semesters, their start/end dates, and holidays when the university is closed.
